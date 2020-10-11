@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Arpsketch</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+  </head>  
+  <body>
+    <div class="spaced">
+      Experience fellow visitors' presence on this page through musical interaction
+    </div>
+    <div id="sketch-canvas">
+      
+    </div>
+    
+    <script src="https://github.com/Tonejs/Tone.js/releases/download/13.8.25/Tone.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js"></script>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect();
+      var room = window.location.search.match('room=(.*)')[1];
+      
+      socket.emit('room', room);
+    </script>
+
+    <script src="/sketch.js"></script>
+    <script src="/audio.js"></script>
+    <script src="https://button.glitch.me/button.js"></script>  
+  </body>
+</html>
