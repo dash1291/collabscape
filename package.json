@@ -1,0 +1,19 @@
+{
+	"name": "arpsketch",
+	"version": "0.1.0",
+	"description": "sketchy music app",
+	"main": "server.js",
+	"scripts": {
+		"start": "node server.js"
+	},
+	"dependencies": {
+		"express": "^4.12.4",
+		"socket.io": "*"
+	},
+	"keywords": [
+		"node",
+		"express",
+		"chat"
+	],
+	"license": "MIT"
+}
