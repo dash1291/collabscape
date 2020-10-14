@@ -68,6 +68,8 @@ document.onclick = function() {
 }
 
 // this is like a handshake or init event
+var usersPos = {};
+
 socket.on('welcome', msg => {
   userId = msg.userId
   currentInstrument = msg.userId % 13
