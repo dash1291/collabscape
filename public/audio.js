@@ -5,6 +5,7 @@ Tone.Transport.bpm.value = 120;
 var userId; // global identifier for the current user
 
 var currentInstrument = 0;
+var tune = new Tune();
 
 function createSampler2(interpolation) {
   let urls = {}; 
@@ -55,7 +56,14 @@ function getNotes(root, intervals) {
   return Tone.Frequency(root).harmonize(randomIntervals).map(function (f) { return f.toNote() })
 }
 
-var notes = getNotes('A3', [0, 4, 7, 11, 14]);
+function getNotesTunejs(scale, intervals) {
+  tune.loadScale(scale);
+  //tune.tonicize(rootFreq);
+  return tune.chord(intervals);
+}
+
+var notes = getNotesTunejs('indian-dk', [60, 63, 67]); // get frequencies for specified scale intervals
+console.log(notes)
 let loops = []
 loops.push(startLoop(() => notes[0], '1:0:0', '3:0:0'));
 loops.push(startLoop(() => notes[1], '1:3:0', '3:0:0'));
