@@ -1,6 +1,6 @@
 var isPlaying = false;
 
-Tone.Transport.bpm.value = 120;
+Tone.Transport.bpm.value = 90;
 
 var userId; // global identifier for the current user
 
@@ -9,7 +9,7 @@ var tune = new Tune();
 
 function createSampler2(interpolation) {
   let urls = {}; 
-  urls[60] = `assets/${interpolation}.wav`; // load the sample for midiNote=60
+  urls[60] = `sounds/${interpolation}.wav`; // load the sample for midiNote=60
 
   return new Tone.Sampler(urls);
 }
@@ -20,10 +20,11 @@ var instruments = [];
 let reverb = new Tone.Reverb({ decay: 2, wet: 0.3 });
 reverb.generate();
 reverb.connect(Tone.context.destination);
-let lpf = new Tone.Filter(16000 / 3, "lowpass").connect(reverb);
+let masterlpf = new Tone.Filter(8000, "lowpass").connect(reverb);
 
-for (var i = 13; i >= 0; i--) {
+for (var i = 3; i >= 0; i--) {
   let newInst = createSampler2(i);
+  let lpf = new Tone.Filter(60, "highpass").connect(masterlpf);
   let panner = new Tone.Panner3D({
     panningModel: "HRTF",
     positionX: 0,
@@ -43,8 +44,8 @@ for (var i = 13; i >= 0; i--) {
 function startLoop(getNote, delay, interval) {
   return new Tone.Loop(function(time) {
     usersPos[userId].playedAt = +new Date();
-    instruments[currentInstrument].synth.triggerAttackRelease(getNote(), '0:3:0');
-    socket.emit('line', {synth: 1, note: getNote(), duration: '0:3:0', userId: userId});
+    instruments[currentInstrument].synth.triggerAttackRelease(getNote(), '1:0:0');
+    socket.emit('line', {synth: 1, note: getNote(), duration: '1:0:0', userId: userId});
   }, interval).start(delay);
 }
 
@@ -62,12 +63,12 @@ function getNotesTunejs(scale, intervals) {
   return tune.chord(intervals);
 }
 
-var notes = getNotesTunejs('indian-dk', [60, 63, 67]); // get frequencies for specified scale intervals
+var notes = getNotesTunejs('slendro', [60, 64, 72]); // get frequencies for specified scale intervals
 console.log(notes)
 let loops = []
-loops.push(startLoop(() => notes[0], '1:0:0', '3:0:0'));
-loops.push(startLoop(() => notes[1], '1:3:0', '3:0:0'));
-loops.push(startLoop(() => notes[2], '2:2:0', '3:0:0'));
+loops.push(startLoop(() => notes[0], '0:0:0', '2:0:0'));
+loops.push(startLoop(() => notes[1], '4:2:0', '1:0:0'));
+loops.push(startLoop(() => notes[2], '4:0:3', '0:1:0'));
 
 Tone.Transport.start('+0.1')
 
@@ -80,7 +81,7 @@ var usersPos = {};
 
 socket.on('welcome', msg => {
   userId = msg.userId
-  currentInstrument = msg.userId % 13
+  currentInstrument = msg.userId % 4
 
   usersPos[userId] = msg.position;
   lastTransmittedPos = {
@@ -91,11 +92,11 @@ socket.on('welcome', msg => {
   Tone.Listener.positionX = msg.position.x;
   Tone.Listener.positionY = msg.position.y
   Tone.Listener.forwardZ = -1
-  instruments[userId % 13].panner.setPosition(msg.position.x, msg.position.y, 0)
+  instruments[userId % 4].panner.setPosition(msg.position.x, msg.position.y, 0)
   
   usersPos = msg.usersPos
   Object.keys(usersPos).forEach(i => {
-    instruments[i % 13].panner.setPosition(usersPos[i].x, usersPos[i].y, 0)
+    instruments[i % 4].panner.setPosition(usersPos[i].x, usersPos[i].y, 0)
   })
   
   usersPos[userId] = msg.position;
@@ -108,7 +109,7 @@ socket.on('join', msg => {
   usersPos[userId] = msg.position;
   usersPos = msg.usersPos
   
-  instruments[userId % 13].panner.setPosition(msg.position.x, msg.position.y, 0)
+  instruments[userId % 4].panner.setPosition(msg.position.x, msg.position.y, 0)
 });
 
 
@@ -117,14 +118,14 @@ socket.on('line', msg => {
   let note = msg.note;
   let duration = msg.duration;
   usersPos[msg.userId].playedAt = +new Date()
-  instruments[msg.userId % 13].synth.triggerAttackRelease(note, duration)
+  instruments[msg.userId % 4].synth.triggerAttackRelease(note, duration)
 }); 
 
 // this is emitted when another peer moves
 socket.on('move', msg => {
   let userId = msg.userId
   usersPos[userId] = msg.position;
-  instruments[userId % 13].panner.setPosition(msg.position.x, msg.position.y, 0)
+  instruments[userId % 4].panner.setPosition(msg.position.x, msg.position.y, 0)
 });
 
 // this is emitted when another peer leaves \o
