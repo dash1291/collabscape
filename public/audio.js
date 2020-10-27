@@ -22,9 +22,9 @@ reverb.generate();
 reverb.connect(Tone.context.destination);
 let masterlpf = new Tone.Filter(8000, "lowpass").connect(reverb);
 
-for (var i = 3; i >= 0; i--) {
+for (var i = 13; i >= 0; i--) {
   let newInst = createSampler2(i);
-  let lpf = new Tone.Filter(60, "highpass").connect(masterlpf);
+  let lpf = new Tone.Filter(600, "lowpass").connect(masterlpf);
   let panner = new Tone.Panner3D({
     panningModel: "HRTF",
     positionX: 0,
@@ -37,7 +37,8 @@ for (var i = 3; i >= 0; i--) {
   instruments.push({
     synth: newInst,
     duration: '0:2',
-    panner: panner
+    panner: panner,
+    lpf, lpf
   });
 }
 
@@ -69,6 +70,7 @@ let loops = []
 loops.push(startLoop(() => notes[0], '0:0:0', '2:0:0'));
 loops.push(startLoop(() => notes[1], '4:2:0', '1:0:0'));
 loops.push(startLoop(() => notes[2], '4:0:3', '0:1:0'));
+// loops.push(startLoop(() => notes[3], '4:0:3', '0:1:2'));
 
 Tone.Transport.start('+0.1')
 
@@ -81,7 +83,7 @@ var usersPos = {};
 
 socket.on('welcome', msg => {
   userId = msg.userId
-  currentInstrument = msg.userId % 4
+  currentInstrument = msg.userId % 13
 
   usersPos[userId] = msg.position;
   lastTransmittedPos = {
@@ -92,11 +94,11 @@ socket.on('welcome', msg => {
   Tone.Listener.positionX = msg.position.x;
   Tone.Listener.positionY = msg.position.y
   Tone.Listener.forwardZ = -1
-  instruments[userId % 4].panner.setPosition(msg.position.x, msg.position.y, 0)
+  instruments[userId % 13].panner.setPosition(msg.position.x, msg.position.y, 0)
   
   usersPos = msg.usersPos
   Object.keys(usersPos).forEach(i => {
-    instruments[i % 4].panner.setPosition(usersPos[i].x, usersPos[i].y, 0)
+    instruments[i % 13].panner.setPosition(usersPos[i].x, usersPos[i].y, 0)
   })
   
   usersPos[userId] = msg.position;
@@ -108,8 +110,8 @@ socket.on('join', msg => {
   let userId = msg.userId
   usersPos[userId] = msg.position;
   usersPos = msg.usersPos
-  
-  instruments[userId % 4].panner.setPosition(msg.position.x, msg.position.y, 0)
+  // instruments[userId % 13].lpf
+  instruments[userId % 13].panner.setPosition(msg.position.x, msg.position.y, 0)
 });
 
 
@@ -118,14 +120,14 @@ socket.on('line', msg => {
   let note = msg.note;
   let duration = msg.duration;
   usersPos[msg.userId].playedAt = +new Date()
-  instruments[msg.userId % 4].synth.triggerAttackRelease(note, duration)
+  instruments[msg.userId % 13].synth.triggerAttackRelease(note, duration)
 }); 
 
 // this is emitted when another peer moves
 socket.on('move', msg => {
   let userId = msg.userId
   usersPos[userId] = msg.position;
-  instruments[userId % 4].panner.setPosition(msg.position.x, msg.position.y, 0)
+  instruments[userId % 13].panner.setPosition(msg.position.x, msg.position.y, 0)
 });
 
 // this is emitted when another peer leaves \o
