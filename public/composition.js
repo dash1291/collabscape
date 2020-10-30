@@ -2,7 +2,7 @@ Tone.Transport.bpm.value = 90;
 
 // Instruments definitions
 for (var i = 13; i >= 0; i--) {
-    let newInst = createSampler(i, 'sounds');
+    let newInst = createSampler(i, 'sounds/scw');
     // newInst.volume.value = -6;
     let lpf = new Tone.Filter(600, "lowpass").connect(masterlpf);
     let panner = new Tone.Panner3D({
