@@ -16,20 +16,17 @@
     <div id="sketch-canvas">
       
     </div>
+    <!-- <button id="playButton"></button> -->
     
-    <script src="https://github.com/Tonejs/Tone.js/releases/download/13.8.25/Tone.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://unpkg.com/tone/build/Tone.js"></script>
     <script src="http://abbernie.github.io/tune/js/tune.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-      var socket = io.connect();
-      var room = window.location.search.match('room=(.*)')[1];
-      
-      socket.emit('room', room);
-    </script>
 
-    <script src="/sketch.js"></script>
+    <script src="/collab.js"></script>
     <script src="/audio.js"></script>
+    <script src="/composition.js"></script>
+    <script src="/sketch.js"></script>
     <script src="https://button.glitch.me/button.js"></script>  
   </body>
 </html>
