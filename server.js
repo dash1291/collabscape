@@ -37,11 +37,11 @@ io.on('connection', function (socket) {
   socket.on('room', function(room) {
     socket.room = room
     socket.join(room);
-    let pos = getRandomPosition()
+    let pos = getRandomPosition();
 
-    usersPos[socket.userId] = pos
-    socket.emit('welcome', {userId: socket.userId, position: pos, usersPos: usersPos})
-    socket.to(socket.room).emit('join', {userId: socket.userId, position: pos, usersPos: usersPos})
+    usersPos[socket.userId] = pos;
+    socket.emit('welcome', {userId: socket.userId, position: pos, usersPos: usersPos});
+    socket.to(socket.room).emit('join', {userId: socket.userId, position: pos, usersPos: usersPos});
   });
   
   socket.on('line', function(obj) {

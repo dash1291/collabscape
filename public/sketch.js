@@ -1,14 +1,13 @@
-var WIDTH = 800
-var HEIGHT = 600
+var WIDTH = window.innerWidth - 10;
+var HEIGHT = window.innerHeight - 30;
 var bgColor = '#0c1a21'
-var usersPos = {}
 var lastTransmittedPos = {}
 
 function setup () {
-  if (windowHeight < HEIGHT) {
-    HEIGHT = windowHeight * 0.7
-  }
-  WIDTH = windowWidth - 420
+  // if (windowHeight < HEIGHT) {
+  //   HEIGHT = windowHeight * 0.7
+  // }
+  // WIDTH = windowWidth - 420
 
   createCanvas(WIDTH, HEIGHT).parent('sketch-canvas')
 
@@ -65,7 +64,7 @@ setInterval(() => {
   let hasXYChanged = (usersPos[userId].x != lastTransmittedPos.x) || (usersPos[userId].y != lastTransmittedPos.y)
 
   if (!areKeysDown && hasXYChanged) {
-    instruments[userId % 13].panner.setPosition(usersPos[userId].x , usersPos[userId].y, 0)
+    // instruments[userId % sampleCount].panner.setPosition(usersPos[userId].x, usersPos[userId].y, 0)
     Tone.Listener.positionX = (usersPos[userId].x);
     Tone.Listener.positionY = (usersPos[userId].y);
 
@@ -79,4 +78,7 @@ setInterval(() => {
       y: usersPos[userId].y
     }    
   }
+  // grainer.playbackRate = abs(map(mouseX, 0, width, 0.001, 0.5));
+  // grainer.overlap = abs(map(mouseX, 0, width, 0.001, 0.05));
+  masterlpf.frequency.value = abs(map(mouseY, 0, height, 200, 15000));
 }, 1000)
