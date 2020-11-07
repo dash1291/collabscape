@@ -61,7 +61,8 @@ function draw() {
 // bombarding the audio changes
 setInterval(() => {
   let areKeysDown = keyIsDown(UP_ARROW) || keyIsDown(DOWN_ARROW) || keyIsDown(LEFT_ARROW) || keyIsDown(RIGHT_ARROW)
-  let hasXYChanged = (usersPos[userId].x != lastTransmittedPos.x) || (usersPos[userId].y != lastTransmittedPos.y)
+  // let hasXYChanged = (usersPos[userId].x != lastTransmittedPos.x) || (usersPos[userId].y != lastTransmittedPos.y)
+  let hasXYChanged = false;
 
   if (!areKeysDown && hasXYChanged) {
     // instruments[userId % sampleCount].panner.setPosition(usersPos[userId].x, usersPos[userId].y, 0)
