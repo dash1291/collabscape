@@ -57,7 +57,7 @@ socket.on('join', msg => {
   console.log(thisUser + ": joined us");
   usersPos[thisUser] = msg.position;
   usersPos = msg.usersPos
-  instruments[thisUser % sampleCount].panner.setPosition(msg.position.x, msg.position.y, 0)
+  audio.instruments[thisUser % sampleCount].panner.setPosition(msg.position.x, msg.position.y, 0)
 });
 
 
@@ -67,7 +67,7 @@ socket.on('line', msg => {
   let note = msg.note;
   let duration = msg.duration;
   usersPos[msg.userId].playedAt = +new Date()
-  instruments[msg.userId % sampleCount].synth.triggerAttackRelease(note, duration)
+  audio.instruments[msg.userId % sampleCount].synth.triggerAttackRelease(note, duration)
 }); 
 
 // this is emitted when another peer moves
@@ -75,7 +75,7 @@ socket.on('move', msg => {
   console.log(msg.userId + ": moved to " + msg.position)
   var thisUser = msg.userId
   usersPos[thisUser] = msg.position;
-  instruments[thisUser % sampleCount].panner.setPosition(msg.position.x, msg.position.y, 0)
+  audio.instruments[thisUser % sampleCount].panner.setPosition(msg.position.x, msg.position.y, 0)
 });
 
 // this is emitted when another peer leaves \o
@@ -84,3 +84,10 @@ socket.on('leave', msg => {
   var thisUser = msg.userId
   delete usersPos[thisUser];
 });
+
+socket.onPositionChange = function(userXY) {
+  socket.emit('move', {
+    userId: userId,
+    position: userXY
+  })
+}

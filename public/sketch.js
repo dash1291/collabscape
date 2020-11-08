@@ -56,7 +56,6 @@ function draw() {
   }  
 }
 
-
 // interval for detecting movement. highly conditional to avoid
 // bombarding the audio changes
 setInterval(() => {
@@ -65,21 +64,18 @@ setInterval(() => {
   let hasXYChanged = false;
 
   if (!areKeysDown && hasXYChanged) {
-    // instruments[userId % sampleCount].panner.setPosition(usersPos[userId].x, usersPos[userId].y, 0)
-    Tone.Listener.positionX = (usersPos[userId].x);
-    Tone.Listener.positionY = (usersPos[userId].y);
-
-    socket.emit('move', {
-      userId: userId,
-      position: usersPos[userId]
+    const userXY = usersPos[userId];
+    audio.onPositionChange(userXY, {
+      x: mouseX,
+      y: mouseY
     })
 
+    socket.onPositionChange(userXY);
+    
     lastTransmittedPos = {
       x: usersPos[userId].x,
       y: usersPos[userId].y
     }    
   }
-  // grainer.playbackRate = abs(map(mouseX, 0, width, 0.001, 0.5));
-  // grainer.overlap = abs(map(mouseX, 0, width, 0.001, 0.05));
-  masterlpf.frequency.value = abs(map(mouseY, 0, height, 200, 15000));
+  
 }, 1000)
