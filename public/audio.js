@@ -10,20 +10,36 @@ audio.createSampler = function(interpolation, folder) {
     });
 }
 
-audio.createInstrument = function(loadKeys, folder) {
+audio.createInstrument = function (folderName, loadKeys) {
     let defnotes = ['c','cs','d','ds','e','f','fs','g','gs','a','as','b'];
     let urls = {};
     for (let index = 0; index < loadKeys.length; index++) {
-        let keyNum = loadKeys[index] + 60;
-        const element = loadKeys[index];
-        var octave = Math.round((element - 23) / 12, 1);
+        let midiNum = loadKeys[index] + 60;
+        var keyNum = loadKeys[index];
+        var octave = 3;
+        switch (true) {
+            case (loadKeys[index] < 0 && loadKeys[index] >= -12):
+                octave = 2;
+                break;
+            case (loadKeys[index] < 12 && loadKeys[index] >= 24):
+                octave = 3;
+                break;
+            case (loadKeys[index] < 24 && loadKeys[index] >= 12):
+                octave = 4;
+                break;
+            case (loadKeys[index] < 36 && loadKeys[index] >= 24):
+                octave = 5;
+                break;
+        }
+        keyNum = loadKeys[index] - (12 * (octave - 3));
+        // octave = Math.floor((keyNum + 36) / 12); // Alternative way to get octave number
 
-        urls[keyNum] = defnotes[Math.min(element, defnotes.length)] + octave + '.wav';
+        urls[midiNum] = defnotes[Math.min(keyNum, defnotes.length)] + octave + '.wav';
     }
     return urls;
     // var sampler = new Tone.Sampler({
     //     urls: urls,
-    //     baseUrl: '/' + folder + '/',
+    //     baseUrl: '/' + folderName + '/',
     // });
     // let lpf = new Tone.Filter(600, "lowpass").connect(masterlpf);
     // let panner = new Tone.Panner3D({
@@ -94,12 +110,20 @@ audio.loadNumberedFolder = function(folderName, sampleCount) {
 }
 
 audio.startCurrentLoop = function (sequence, interval) {
-    return new Tone.Loop(function(time) {
-        const seq = new Tone.Sequence((time, note) => {
+    // return new Tone.Loop(function(time) {
+        // const seq = new Tone.Sequence((time, note) => {
+        return new Tone.Sequence((time, note) => {
             audio.instruments[audio.currentInstrument].synth.triggerAttackRelease(note, 0.1, time);
             // subdivisions are given as subarrays
         }, sequence).start(0);
-    }, interval).start(0);
+    // }, interval).start(0);
+}
+
+audio.startSequence = function (instrument, sequence, interval) {
+    return new Tone.Sequence((time, note) => {
+        instrument.synth.triggerAttackRelease(note, 0.1, time);
+        // subdivisions are given as subarrays
+    }, sequence).start(0);
 }
 
 audio.getNotesTunejs = function (scale, intervals) {

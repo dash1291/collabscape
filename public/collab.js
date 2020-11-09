@@ -27,7 +27,10 @@ readURL();
 
 socket.on('welcome', msg => {
   userId = msg.userId;
-  currentInstrument = msg.userId % sampleCount;
+  usersPos[userId] = msg.position;
+  usersPos[userId].playedAt = 0;
+  
+  currentInstrument = msg.userId % audio.instruments.length;
   console.log("Got someone in: "+userId);
   console.log(usersPos.count + " people in the room");
 
@@ -40,15 +43,14 @@ socket.on('welcome', msg => {
   Tone.Listener.positionX = msg.position.x;
   Tone.Listener.positionY = msg.position.y
   Tone.Listener.forwardZ = -1
-  // instruments[userId % sampleCount].panner.setPosition(msg.position.x, msg.position.y, 0)
-  
-  // usersPos = msg.usersPos
-  Object.keys(usersPos).forEach(i => {
-    // instruments[i % sampleCount].panner.setPosition(usersPos[i].x, usersPos[i].y, 0)
-  })
-  
-  usersPos[userId] = msg.position;
-  usersPos[userId].playedAt = 0;
+  if (audio.instruments[userId % audio.instruments.length]) {
+    audio.instruments[userId  % audio.instruments.length].panner.setPosition(msg.position.x, msg.position.y, 0)
+    
+    // usersPos = msg.usersPos
+    Object.keys(usersPos).forEach(i => {
+      audio.instruments[i % audio.instruments.length].panner.setPosition(usersPos[i].x, usersPos[i].y, 0)
+    })
+  }
 });
 
 // this is emitted when another peer joins
@@ -57,7 +59,7 @@ socket.on('join', msg => {
   console.log(thisUser + ": joined us");
   usersPos[thisUser] = msg.position;
   usersPos = msg.usersPos
-  audio.instruments[thisUser % sampleCount].panner.setPosition(msg.position.x, msg.position.y, 0)
+  audio.instruments[thisUser % audio.instruments.length].panner.setPosition(msg.position.x, msg.position.y, 0)
 });
 
 
@@ -75,7 +77,7 @@ socket.on('move', msg => {
   console.log(msg.userId + ": moved to " + msg.position)
   var thisUser = msg.userId
   usersPos[thisUser] = msg.position;
-  audio.instruments[thisUser % sampleCount].panner.setPosition(msg.position.x, msg.position.y, 0)
+  audio.instruments[thisUser % audio.instruments.length].panner.setPosition(msg.position.x, msg.position.y, 0)
 });
 
 // this is emitted when another peer leaves \o

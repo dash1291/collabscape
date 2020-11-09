@@ -1,5 +1,5 @@
-var WIDTH = window.innerWidth - 10;
-var HEIGHT = window.innerHeight - 30;
+var WIDTH = window.innerWidth - 50;
+var HEIGHT = window.innerHeight - 100;
 var bgColor = '#0c1a21'
 var lastTransmittedPos = {}
 
