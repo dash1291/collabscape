@@ -16,55 +16,39 @@ audio.createInstrument = function (folderName, loadKeys) {
     for (let index = 0; index < loadKeys.length; index++) {
         let midiNum = loadKeys[index] + 60;
         var keyNum = loadKeys[index];
-        var octave = 3;
-        switch (true) {
-            case (loadKeys[index] < 0 && loadKeys[index] >= -12):
-                octave = 2;
-                break;
-            case (loadKeys[index] < 12 && loadKeys[index] >= 24):
-                octave = 3;
-                break;
-            case (loadKeys[index] < 24 && loadKeys[index] >= 12):
-                octave = 4;
-                break;
-            case (loadKeys[index] < 36 && loadKeys[index] >= 24):
-                octave = 5;
-                break;
-        }
-        keyNum = loadKeys[index] - (12 * (octave - 3));
-        // octave = Math.floor((keyNum + 36) / 12); // Alternative way to get octave number
-
-        urls[midiNum] = defnotes[Math.min(keyNum, defnotes.length)] + octave + '.wav';
+        var octave = Math.floor((keyNum + 36) / 12);
+        var note = defnotes[(keyNum + 36) % 12];
+        urls[midiNum] = note + octave + '.wav';
     }
-    return urls;
-    // var sampler = new Tone.Sampler({
-    //     urls: urls,
-    //     baseUrl: '/' + folderName + '/',
-    // });
-    // let lpf = new Tone.Filter(600, "lowpass").connect(masterlpf);
-    // let panner = new Tone.Panner3D({
-    //     panningModel: "HRTF",
-    //     positionX: 0,
-    //     positionY: 0,
-    //     refDistance: 0.1
-    // })
+    // return urls;
+    var sampler = new Tone.Sampler({
+        urls: urls,
+        baseUrl: '/sounds/' + folderName + '/',
+    });
+    let lpf = new Tone.Filter(20000, "lowpass").connect(masterlpf);
+    let panner = new Tone.Panner3D({
+        panningModel: "HRTF",
+        positionX: 0,
+        positionY: 0,
+        refDistance: 0.1
+    })
 
-    // panner.connect(lpf);
-    // sampler.connect(panner)
-    // return {
-    //     synth: sampler,
-    //     duration: '0:2',
-    //     panner: panner,
-    //     lpf,
-    //     lpf
-    // };
+    panner.connect(lpf);
+    sampler.connect(panner)
+    return {
+        synth: sampler,
+        duration: '4:0',
+        panner: panner,
+        lpf,
+        lpf
+    };
 }
 
 audio.loadFolder = function (folderName, sampleList) {
     for (var i = sampleList.count; i > 0; i--) {
         let newInst = audio.createSampler(sampleList[i], 'sounds/'+folderName);
         // newInst.volume.value = -6;
-        let lpf = new Tone.Filter(600, "lowpass").connect(masterlpf);
+        let lpf = new Tone.Filter(20000, "lowpass").connect(masterlpf);
         let panner = new Tone.Panner3D({
             panningModel: "HRTF",
             positionX: 0,
@@ -109,21 +93,34 @@ audio.loadNumberedFolder = function(folderName, sampleCount) {
     console.log("Loaded samples from: "+folderName)
 }
 
-audio.startCurrentLoop = function (sequence, interval) {
-    // return new Tone.Loop(function(time) {
-        // const seq = new Tone.Sequence((time, note) => {
-        return new Tone.Sequence((time, note) => {
-            audio.instruments[audio.currentInstrument].synth.triggerAttackRelease(note, 0.1, time);
-            // subdivisions are given as subarrays
-        }, sequence).start(0);
-    // }, interval).start(0);
+audio.startCurrentLoop = function (sequence, phase) {
+    return new Tone.Sequence((time, note) => {
+        audio.instruments[audio.currentInstrument].synth.triggerAttackRelease(note, 0.1, time);
+        // subdivisions are given as subarrays
+    }, sequence).start(phase);
 }
 
-audio.startSequence = function (instrument, sequence, interval) {
+audio.startLoop = function (instrument, loop, div, phase) {
+    new Tone.Loop((time) => {
+        instrument.synth.triggerAttackRelease(loop, 0.1, time);
+    }, div).start(phase);
+}
+
+audio.startSequence = function (instrument, sequence, phase) {
     return new Tone.Sequence((time, note) => {
-        instrument.synth.triggerAttackRelease(note, 0.1, time);
+        if (note!=0) {
+            instrument.synth.triggerAttackRelease(note, 0.1, time);
+        }
         // subdivisions are given as subarrays
-    }, sequence).start(0);
+    }, sequence).start(phase);
+}
+
+audio.startPart = function (instrument, part, phase) {
+    return new Tone.Part(((time, note) => {
+        if (note != 0) {
+            instrument.synth.triggerAttackRelease(note, 0.1, time);
+        }
+    }), part).start(phase);
 }
 
 audio.getNotesTunejs = function (scale, intervals) {
@@ -154,7 +151,7 @@ let reverb = new Tone.Reverb({
 });
 reverb.generate();
 reverb.connect(Tone.context.destination);
-let masterlpf = new Tone.Filter(8000, "lowpass").connect(reverb);
+let masterlpf = new Tone.Filter(20000, "lowpass").connect(reverb);
 
 window.onload = function () {
     console.log('Loaded!');

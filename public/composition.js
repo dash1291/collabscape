@@ -13,14 +13,22 @@ let sampleList = ['NS-Sounddesign-As', "NS-Sounddesign-Ds", "NS-Sounddesign-F", 
 //     }
 // }).connect(masterlpf);
 // grainer.volume.value = -15;
-
-var marimba = audio.createInstrument('sounds/marimba', [-12, -5, 0, 3, 5, 7, 8, 12]);
+var loadKeys = [0, 3, 5, 7, 8];
+var marimba = audio.createInstrument('marimba', loadKeys);
 console.log(marimba)
 
 var notes = audio.getNotesTunejs('slendro', [60, 64, 72]); // get frequencies for specified scale intervals
 console.log(notes)
 // loops.push(audio.startCurrentLoop([[0, "C4"], [0, "E4"], "G4", ["A4", "G4"]], '4:0:0'));
-// loops.push(audio.startSequence(marimba, [['C4'], [0, "DS4"]], '1:0:0'))
+
+// loops.push(audio.startSequence(marimba, ['C4', "D#4"], 0))
+loops.push(audio.startSequence(marimba, [0, 'E4', 0], '4m'))
+loops.push(audio.startSequence(marimba, ['C5', 0, 'G4', 0, 'G#4'], 0))
+
+// loops.push(audio.startLoop(marimba, ['C3', 'E3', 'G3'], '2t', 0))
+// loops.push(audio.startLoop(marimba, ['G3'], '2n', '4t'))
+// loops.push(audio.startPart(marimba, [[0, 0], ['4t', 'E3'], ['', 0]], 0))
+
 
 // audio.loadNumberedFolder('scw', sampleCount);
 // audio.loadNumberedFolder('hits', sampleCount);
