@@ -4,7 +4,6 @@ var bgColor = '#0c1a21'
 var lastTransmittedPos = {}
 
 let q5 = new Q5();
-
 q5.setup = function () {
     // if (window.innerHeight < HEIGHT) {
     //     HEIGHT = window.innerHeight * 0.7
@@ -12,7 +11,6 @@ q5.setup = function () {
     // WIDTH = window.innerWidth - 420
 
     q5.createCanvas(WIDTH, HEIGHT)
-
     q5.frameRate(30)
     q5.createGraphics(WIDTH, HEIGHT)
     q5.background(bgColor)
