@@ -15,6 +15,10 @@ q5.setup = function () {
     q5.createGraphics(WIDTH, HEIGHT)
     q5.background(bgColor)
     q5.colorMode(q5.HSL);
+
+    q5.textFont('Helvetica');
+    q5.textSize(16);
+    q5.textAlign(q5.CENTER, q5.CENTER);
 }
 
 q5.draw = function () {
@@ -36,6 +40,7 @@ q5.draw = function () {
         }
         q5.fill(h, 80, 80, 1 - 0.8 * r / 110)
         q5.circle(usersPos[i].x * WIDTH, usersPos[i].y * HEIGHT, r);
+        // q5.text(usersPos[i].x + ' x ' + usersPos[i].y, usersPos[i].x * WIDTH, usersPos[i].y * HEIGHT);
     })
 
     // movement
@@ -62,15 +67,13 @@ setInterval(() => {
     let hasXYChanged = false;
     let areKeysDown = false;
     areKeysDown = q5.keyIsDown(q5.UP_ARROW) || q5.keyIsDown(q5.DOWN_ARROW) || q5.keyIsDown(q5.LEFT_ARROW) || q5.keyIsDown(q5.RIGHT_ARROW);
-    // if (userId === Number(i)) {
-    //     hasXYChanged = (usersPos[userId].x != lastTransmittedPos.x) || (usersPos[userId].y != lastTransmittedPos.y)
-    // }
+    hasXYChanged = (usersPos[userId].x != lastTransmittedPos.x) || (usersPos[userId].y != lastTransmittedPos.y)
 
     if (!areKeysDown && hasXYChanged) {
         const userXY = usersPos[userId];
         audio.onPositionChange(userXY, {
-            x: mouseX,
-            y: mouseY
+            x: q5.mouseX,
+            y: q5.mouseY
         })
 
         socket.onPositionChange(userXY);

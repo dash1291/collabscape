@@ -27,7 +27,7 @@ readURL();
 
 socket.on('welcome', msg => {
   userId = msg.userId;
-  usersPos[userId] = msg.position;
+  usersPos = msg.usersPos; // Gets positions of all users
   usersPos[userId].playedAt = 0;
   
   currentInstrument = msg.userId % audio.instruments.length;
