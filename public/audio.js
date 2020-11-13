@@ -128,7 +128,7 @@ audio.getNotesTunejs = function (scale, intervals) {
     return tune.chord(intervals);
 }
 
-audio.onPositionChange = function(userXY, mouseXY) {
+audio.onPositionChanged = function(userXY, mouseXY) {
     // instruments[userId % sampleCount].panner.setPosition(usersPos[userId].x, usersPos[userId].y, 0)
 
     Tone.Listener.positionX = (userXY.x);
@@ -139,7 +139,25 @@ audio.onPositionChange = function(userXY, mouseXY) {
     masterlpf.frequency.value = abs(map(mouseXY.y, 0, HEIGHT, 200, 15000));
 }
 
+audio.onRoomJoined = function(userId, instrument, position, usersPos) {
+    Tone.Listener.positionX = position.x;
+    Tone.Listener.positionY = position.y
+    Tone.Listener.forwardZ = -1
+
+    audio.roomInstrumentName = instrument
+
+    if (audio.instruments[instrument]) {
+        audio.instruments[instrument].panner.setPosition(position.x, position.y, 0)
+        
+        // usersPos = msg.usersPos
+        Object.keys(usersPos).forEach(i => {
+            audio.instruments[i % audio.instruments.length].panner.setPosition(usersPos[i].x, usersPos[i].y, 0)
+        })
+    }
+}
+
 audio.instruments = [];
+
 audio.currentInstrument = 0;
 let loops = [];
 var tune = new Tune();

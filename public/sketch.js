@@ -70,7 +70,7 @@ setInterval(() => {
       y: mouseY
     })
 
-    socket.onPositionChange(userXY);
+    socket.onPositionChanged(userXY);
     
     lastTransmittedPos = {
       x: usersPos[userId].x,
