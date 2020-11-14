@@ -18,23 +18,29 @@ function startComposition() {
 
     var marimba = audio.createInstrument(audio.roomInstrumentName, loadKeys);
     //var marimba = audio.getRoomInstrument(loadKeys)
-    console.log(marimba)
 
-    var notes = audio.getNotesTunejs('slendro', [60, 64, 72]); // get frequencies for specified scale intervals
-    console.log(notes)
-    // loops.push(audio.startCurrentLoop([[0, "C4"], [0, "E4"], "G4", ["A4", "G4"]], '4:0:0'));
+    var noteList = [60, 63, 64, 66, 67, 72];
 
-    // loops.push(audio.startSequence(marimba, ['C4', "D#4"], 0))
-    loops.push(audio.startSequence(marimba, [0, 'E4', 0], '4m'))
-    loops.push(audio.startSequence(marimba, ['C5', 0, 'G4', 0, 'G#4'], 0))
-
-    // loops.push(audio.startLoop(marimba, ['C3', 'E3', 'G3'], '2t', 0))
-    // loops.push(audio.startLoop(marimba, ['G3'], '2n', '4t'))
-    // loops.push(audio.startPart(marimba, [[0, 0], ['4t', 'E3'], ['', 0]], 0))
-
-
+    // Test sequence
+    // loops.push(audio.startSequence(marimba, ["C4", "G3"], 0))
+    
+    // Basic melody sequence with just intonation
+    var notesJI = audio.getNotesTunejs('ji_12', noteList) // get frequencies for specified scale intervals
+    loops.push(audio.startSequence(marimba, [notesJI[0], notesJI[1]], 0))
+    loops.push(audio.startSequence(marimba, [0, notesJI[2], 0], 0))
+    loops.push(audio.startSequence(marimba, [notesJI[5], 0, notesJI[3], 0, notesJI[4]], 0))
+    
+    // Basic melody sequence with just intonation shifted forward by 0.5 cycle
+    // loops.push(audio.startSequence(marimba, [notesJI[0], notesJI[1]], 4.5))
+    // loops.push(audio.startSequence(marimba, [0, notesJI[2], 0], 4.6))
+    // loops.push(audio.startSequence(marimba, [notesJI[5], 0, notesJI[3], 0, notesJI[4]], 0.6))
+    
+    // Same composition in slendro
+    // var notesS = audio.getNotesTunejs('slendro', noteList)
+    // loops.push(audio.startSequence(marimba, [notesS[0], notesS[1]], 0))
+    // loops.push(audio.startSequence(marimba, [0, notesS[2], 0], 0))
+    // loops.push(audio.startSequence(marimba, [notesS[5], 0, notesS[3], 0, notesS[4]], 0))
+    
     // audio.loadNumberedFolder('scw', sampleCount);
     // audio.loadNumberedFolder('hits', sampleCount);
-    // var notesS = audio.getNotesTunejs('slendro', [60, 63, 67])
-    // var notesJI = audio.getNotesTunejs('ji_12', [60, 63, 67])
 }

@@ -49,7 +49,7 @@ socket.on('join', msg => {
   console.log(thisUser + ": joined us");
   usersPos[thisUser] = msg.position;
   usersPos = msg.usersPos
-  audio.instruments[thisUser % audio.instruments.length].panner.setPosition(msg.position.x, msg.position.y, 0)
+  audio.instruments[audio.currentInstrument].panner.setPosition(msg.position.x, msg.position.y, 0)
 });
 
 
@@ -59,7 +59,7 @@ socket.on('line', msg => {
   let note = msg.note;
   let duration = msg.duration;
   usersPos[msg.userId].playedAt = +new Date()
-  audio.instruments[msg.userId % sampleCount].synth.triggerAttackRelease(note, duration)
+  audio.instruments[audio.currentInstrument].synth.triggerAttackRelease(note, duration)
 }); 
 
 // this is emitted when another peer moves
@@ -67,7 +67,7 @@ socket.on('move', msg => {
   console.log(msg.userId + ": moved to " + msg.position)
   var thisUser = msg.userId
   usersPos[thisUser] = msg.position;
-  audio.instruments[thisUser % audio.instruments.length].panner.setPosition(msg.position.x, msg.position.y, 0)
+  audio.instruments[audio.currentInstrument].panner.setPosition(msg.position.x, msg.position.y, 0)
 });
 
 // this is emitted when another peer leaves \o

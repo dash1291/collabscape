@@ -107,12 +107,15 @@ audio.startLoop = function (instrument, loop, div, phase) {
 }
 
 audio.startSequence = function (instrument, sequence, phase) {
+    var shifted = phase;
     return new Tone.Sequence((time, note) => {
         if (note!=0) {
-            instrument.synth.triggerAttackRelease(note, 0.1, time);
+            console.log(note + ' at ' + time + phase)
+            instrument.synth.triggerAttackRelease(note, 0.1, time + phase);
+            // socket.emit('line', note: note, duration: '0:3:0', userId: userId);
         }
         // subdivisions are given as subarrays
-    }, sequence).start(phase);
+    }, sequence).start();
 }
 
 audio.startPart = function (instrument, part, phase) {
@@ -164,8 +167,8 @@ var tune = new Tune();
 
 // add some effects
 let reverb = new Tone.Reverb({
-    decay: 0.24,
-    wet: 0.2
+    decay: 0.7,
+    wet: 0.7
 });
 reverb.generate();
 reverb.connect(Tone.context.destination);
