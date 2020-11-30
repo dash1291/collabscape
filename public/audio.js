@@ -6,7 +6,7 @@ audio.createSampler = function(interpolation, folder) {
         urls: {
             60: interpolation + '.wav'
         },
-        baseUrl: '/' + folder + '/',
+        baseUrl: '/storage/files/khoparzi/' + folder + '/',
     });
 }
 
@@ -23,7 +23,7 @@ audio.createInstrument = function (folderName, loadKeys) {
     // return urls;
     var sampler = new Tone.Sampler({
         urls: urls,
-        baseUrl: '/sounds/' + folderName + '/',
+        baseUrl: '/storage/files/khoparzi/sounds/' + folderName + '/',
     });
     let lpf = new Tone.Filter(20000, "lowpass").connect(masterlpf);
     let panner = new Tone.Panner3D({
@@ -136,7 +136,7 @@ audio.onPositionChanged = function(userXY, mouseXY) {
 
     Tone.Listener.positionX = (userXY.x);
     Tone.Listener.positionY = (userXY.y);
-    
+
     // grainer.playbackRate = abs(map(mouseX, 0, width, 0.001, 0.5));
     // grainer.overlap = abs(map(mouseX, 0, width, 0.001, 0.05));
     masterlpf.frequency.value = abs(map(mouseXY.y, 0, HEIGHT, 200, 15000));
@@ -151,7 +151,7 @@ audio.onRoomJoined = function(userId, instrument, position, usersPos) {
 
     if (audio.instruments[instrument]) {
         audio.instruments[instrument].panner.setPosition(position.x, position.y, 0)
-        
+
         // usersPos = msg.usersPos
         Object.keys(usersPos).forEach(i => {
             audio.instruments[i % audio.instruments.length].panner.setPosition(usersPos[i].x, usersPos[i].y, 0)

@@ -1,5 +1,5 @@
 // this is like a handshake or init event
-var socket = io.connect();
+var socket = io.connect('https://collab-noisescape.glitch.me');
 var userId;
 var usersPos = {};
 
@@ -60,7 +60,7 @@ socket.on('line', msg => {
   let duration = msg.duration;
   usersPos[msg.userId].playedAt = +new Date()
   audio.instruments[audio.currentInstrument].synth.triggerAttackRelease(note, duration)
-}); 
+});
 
 // this is emitted when another peer moves
 socket.on('move', msg => {
