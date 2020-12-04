@@ -33,6 +33,9 @@ q5.draw = function () {
         } else {
             r = 10 + 100 * Math.sin((Math.PI / 100) * playedSince)
         }
+        if (userId == i) {
+            r += 50
+        }
         
         let h = 20
         if (userId === Number(i)) {
@@ -40,6 +43,10 @@ q5.draw = function () {
         }
         q5.fill(h, 80, 80, 1 - 0.8 * r / 110)
         q5.circle(usersPos[i].x * WIDTH, usersPos[i].y * HEIGHT, r);
+        q5.noFill();
+        q5.stroke(h, 80, 80, 1 - 0.8 * r / 110)
+        q5.line(usersPos[i].x * WIDTH, usersPos[i].y * HEIGHT, usersPos[userId].x * WIDTH, usersPos[userId].y * HEIGHT)
+        q5.noStroke();
         // q5.text(usersPos[i].x + ' x ' + usersPos[i].y, usersPos[i].x * WIDTH, usersPos[i].y * HEIGHT);
     })
     
