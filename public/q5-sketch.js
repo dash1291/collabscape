@@ -73,12 +73,12 @@ setInterval(() => {
     
     if (!areKeysDown && hasXYChanged) {
         const userXY = usersPos[userId];
-        audio.onPositionChange(userXY, {
+        audio.onPositionChanged(userXY, {
             x: q5.mouseX,
             y: q5.mouseY
         })
         
-        socket.onPositionChange(userXY);
+        socket.onPositionChanged(userXY);
         
         lastTransmittedPos = {
             x: usersPos[userId].x,
@@ -87,5 +87,5 @@ setInterval(() => {
     }
 }, 1000)
 
-let parent = document.getElementById("sketchCanvas");
-parent.appendChild(q5.canvas);
+let sketchCanvas = document.getElementById("sketchCanvas");
+sketchCanvas.appendChild(q5.canvas);

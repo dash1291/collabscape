@@ -29,8 +29,12 @@ body {
   align-items: center;
 }
 
-#sketch-canvas {
+#sketchCanvas {
   display: block;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: -10;
 }
 
 .spaced {
@@ -52,10 +56,9 @@ body {
 }
 
 #hydraCanvas {
+  display: block;
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 1920px;
-  height: 1080px;
-  z-index: 100;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
 }
