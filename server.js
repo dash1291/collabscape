@@ -82,14 +82,12 @@ io.on('connection', function (socket) {
 
   let pos = getRandomPosition();
 
-    usersPos[socket.userId] = pos;
-    socket.emit('welcome', {userId: socket.userId, position: pos, usersPos: usersPos, instrument: allotedRoom.instrument });
-    socket.to(socket.room).emit('join', {userId: socket.userId, position: pos, usersPos: usersPos});
-  //});
+  usersPos[socket.userId] = pos;
+  socket.emit('welcome', {userId: socket.userId, position: pos, usersPos: usersPos, instrument: allotedRoom.instrument });
+  socket.to(socket.room).emit('join', {userId: socket.userId, position: pos, usersPos: usersPos});
   
   socket.on('line', function(obj) {
     socket.to(socket.room).emit('line', obj);
-    //socket.to.emit('line', obj);
   });
   
   socket.on('disconnecting', () => {
