@@ -19,7 +19,7 @@ function readURL() {
     console.log("Joining room:" + room);
     socket.emit('room', room);
   } else {
-    //assignRoom()
+    assignRoom()
   }
 }
 
@@ -28,10 +28,11 @@ readURL();
 socket.on('welcome', msg => {
   userId = msg.userId;
   usersPos = msg.usersPos; // Gets positions of all users
+  usersPos[userId] = socket.getRandomPosition();
   usersPos[userId].playedAt = 0;
   currentInstrument = msg.userId % audio.instruments.length;
   console.log("Got someone in: " + userId);
-  console.log(usersPos.count + " people in the room");
+  console.log(usersPos.length + " people in the room");
 
   usersPos[userId] = msg.position;
   lastTransmittedPos = {
@@ -59,7 +60,10 @@ socket.on('line', msg => {
   let note = msg.note;
   let duration = msg.duration;
   usersPos[msg.userId].playedAt = +new Date()
-  audio.instruments[audio.currentInstrument].synth.triggerAttackRelease(note, duration)
+  // Don't try to play the current users notes
+  // if (audio.isPlaying && msg.userId != userId) {
+    audio.instruments[audio.currentInstrument].synth.triggerAttackRelease(note, duration)
+  // }
 });
 
 // this is emitted when another peer moves
@@ -77,9 +81,16 @@ socket.on('leave', msg => {
   delete usersPos[thisUser];
 });
 
-socket.onPositionChange = function(userXY) {
+socket.onPositionChanged = function(userXY) {
   socket.emit('move', {
     userId: userId,
     position: userXY
   })
+}
+
+socket.getRandomPosition = function() {
+  return {
+    x: Math.random(),
+    y: 0
+  }
 }
