@@ -1,5 +1,5 @@
 // this is like a handshake or init event
-var socket = io.connect('https://collab-noisescape.glitch.me');
+var socket = assetPaths.length ? io.connect('https://collab-noisescape.glitch.me') : io.connect();
 var userId;
 var usersPos = {};
 

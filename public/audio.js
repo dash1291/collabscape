@@ -6,7 +6,7 @@ audio.createSampler = function(interpolation, folder) {
         urls: {
             60: interpolation + '.wav'
         },
-        baseUrl: '/storage/files/khoparzi/' + folder + '/',
+        baseUrl: assetPaths + '/' + folder + '/',
     });
 }
 
@@ -23,7 +23,7 @@ audio.createInstrument = function (folderName, loadKeys) {
     // return urls;
     let sampler = new Tone.Sampler({
         urls: urls,
-        baseUrl: '/storage/files/khoparzi/sounds/' + folderName + '/',
+        baseUrl: assetPaths + '/sounds/' + folderName + '/',
     });
     let lpf = new Tone.Filter(20000, "lowpass").connect(masterlpf);
     let panner = new Tone.Panner3D({
