@@ -1,6 +1,5 @@
 // Setup basic express server
 var express = require('express');
-const { all } = require('./assets');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
@@ -12,16 +11,12 @@ server.listen(port, function () {
 
 // Routing
 app.use(express.static('public'));
-var assets = require('./assets');
-app.use("/assets", assets);
-
 
 // Chatroom
 
 var numUsers = 0;
 
-var rooms = [
-  {
+var rooms = [{
     id: 0,
     name: 'Ambient',
     instrument: 'marimba',
@@ -31,20 +26,14 @@ var rooms = [
   {
     id: 1,
     name: 'Clicks',
-    instrument: 'marimba',
+    instrument: 'scw',
     maxUsers: 10,
     currentUsers: 0
   },
-  {
-    id: 2,
-    name: 'marimba',
-    instrument: 'marimba',
-    maxUsers: 10,
-    currentUsers: 0
-  }
 ];
 
 function getAvailableRoom() {
+  // Sends a random room id for now
   return rooms.filter(r => r.maxUsers > r.currentUsers)[Math.floor(Math.random() * rooms.length)]
 }
 
