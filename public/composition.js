@@ -16,7 +16,7 @@ function startComposition() {
     // grainer.volume.value = -15;
     var loadKeys = [0, 3, 5, 7, 8];
 
-    var marimba = audio.createInstrument(audio.roomInstrumentName, loadKeys);
+    var marimba = audio.userInstruments[userId]
     //var marimba = audio.getRoomInstrument(loadKeys)
 
     var noteList = [60, 63, 64, 66, 67, 72];

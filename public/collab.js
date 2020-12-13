@@ -1,5 +1,6 @@
 // this is like a handshake or init event
-var socket = io.connect('https://collab-noisescape.glitch.me');
+//var socket = io.connect('https://collab-noisescape.glitch.me');
+var socket = io.connect();
 var userId;
 var usersPos = {};
 
@@ -27,11 +28,12 @@ readURL();
 
 socket.on('welcome', msg => {
   userId = msg.userId;
-  usersPos = msg.usersPos; // Gets positions of all users
+  usersPos = msg.room.users
+  console.log('userspos ', usersPos)
   usersPos[userId].playedAt = 0;
   currentInstrument = msg.userId % audio.instruments.length;
   console.log("Got someone in: " + userId);
-  console.log(usersPos.count + " people in the room");
+  console.log(Object.keys(usersPos).length + " people in the room");
 
   usersPos[userId] = msg.position;
   lastTransmittedPos = {
@@ -39,27 +41,31 @@ socket.on('welcome', msg => {
     y: msg.position.y
   }
 
-  audio.onRoomJoined(userId, msg.instrument, msg.position, usersPos)
-  startComposition();
+  console.log(msg.room);
+  audio.onRoomJoined(userId, msg.room.instrument, msg.position, usersPos)
+  startComposition(msg.room.currentUsers);
 });
+
+socket.on('random', msg => console.log('randooooooooomm'))
 
 // this is emitted when another peer joins
 socket.on('join', msg => {
   var thisUser = msg.userId
   console.log(thisUser + ": joined us");
   usersPos[thisUser] = msg.position;
-  usersPos = msg.usersPos
-  audio.instruments[audio.currentInstrument].panner.setPosition(msg.position.x, msg.position.y, 0)
+  usersPos = msg.room.users
+  var loadKeys = [0, 3, 5, 7, 8];
+  var marimba = audio.createInstrument(audio.roomInstrumentName, loadKeys);
+  audio.userInstruments[thisUser] = marimba;
+  audio.userInstruments[thisUser].panner.setPosition(msg.position.x, msg.position.y, 0)
 });
-
 
 // this is emitted when another peer sends their melody
 socket.on('line', msg => {
-  console.log(msg.userId + ": sent something")
   let note = msg.note;
   let duration = msg.duration;
   usersPos[msg.userId].playedAt = +new Date()
-  audio.instruments[audio.currentInstrument].synth.triggerAttackRelease(note, duration)
+  audio.userInstruments[msg.userId].synth.triggerAttackRelease(note, duration)
 });
 
 // this is emitted when another peer moves
@@ -67,17 +73,18 @@ socket.on('move', msg => {
   console.log(msg.userId + ": moved to " + msg.position)
   var thisUser = msg.userId
   usersPos[thisUser] = msg.position;
-  audio.instruments[audio.currentInstrument].panner.setPosition(msg.position.x, msg.position.y, 0)
+  audio.userInstruments[thisUser].panner.setPosition(msg.position.x, msg.position.y, 0)
 });
 
 // this is emitted when another peer leaves \o
 socket.on('leave', msg => {
   console.log(msg.userId + ": left")
   var thisUser = msg.userId
+  delete audio.userInstruments[thisUser];
   delete usersPos[thisUser];
 });
 
-socket.onPositionChange = function(userXY) {
+socket.onPositionChanged = function(userXY) {
   socket.emit('move', {
     userId: userId,
     position: userXY
