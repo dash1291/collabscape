@@ -107,18 +107,26 @@ audio.onRoomJoined = function(userId, instrument, position, usersPos) {
 
     audio.roomInstrumentName = instrument
 
-    if (audio.instruments[instrument]) {
-        audio.instruments[instrument].panner.setPosition(position.x, position.y, 0)
+    Object.keys(usersPos).forEach(i => {
+        var loadKeys = [0, 3, 5, 7, 8];
 
-        usersPos = msg.usersPos
-        Object.keys(usersPos).forEach(i => {
-            audio.instruments[i % audio.instruments.length].panner.setPosition(usersPos[i].x, usersPos[i].y, 0)
-        })
-    }
+        var marimba = audio.createInstrument(audio.roomInstrumentName, loadKeys);
+        audio.userInstruments[i] = marimba;
+        audio.userInstruments[i].panner.setPosition(usersPos[i].x, usersPos[i].y, 0)
+
+        console.log(i);
+        if (i == userId) {
+            console.log('self')
+            Tone.Listener.positionX = usersPos[i].x
+            Tone.Listener.positionY = usersPos[i].y
+            Tone.Listener.forwardZ = -1
+        }
+    })
+
 }
 
 audio.instruments = [];
-
+audio.userInstruments = {};
 audio.currentInstrument = 0;
 
 // add some effects

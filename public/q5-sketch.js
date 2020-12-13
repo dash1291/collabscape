@@ -27,6 +27,8 @@ q5.draw = function () {
     // blink effect for each dot starts below
     Object.keys(usersPos).forEach(i => {
         let r = 0
+        //console.log(i)
+        //console.log(usersPos)
         let playedSince = ((+new Date()) - (usersPos[i].playedAt || 0));
         if (playedSince > 100 || playedSince < 0) {
             r = 10
@@ -53,7 +55,7 @@ q5.draw = function () {
         q5.fill(255);
         q5.textSize(50);
         q5.textAlign(q5.CENTER, q5.CENTER);
-        q5.text(tracks[0].currentNote, WIDTH / 2, HEIGHT / 2);
+        // q5.text(tracks[0].currentNote, WIDTH / 2, HEIGHT / 2);
     }
 
     // movement
