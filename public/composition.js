@@ -9,7 +9,9 @@ let trackCount = 8;
 function startComposition() {
     let loadKeys = [0, 3, 5, 7, 8];
 
-    let marimba = audio.createInstrument(audio.roomInstrumentName, loadKeys);
+
+    var marimba = audio.userInstruments[userId]
+
     //var marimba = audio.getRoomInstrument(loadKeys)
     audio.instruments.push(marimba);
 

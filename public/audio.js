@@ -7,6 +7,7 @@ audio.createSampler = function(interpolation, folder) {
             60: interpolation + '.wav'
         },
         baseUrl: assetPaths + '/' + folder + '/',
+
     });
 }
 
@@ -93,11 +94,55 @@ audio.loadNumberedFolder = function(folderName, sampleCount) {
     console.log("Loaded samples from: "+folderName)
 }
 
+audio.startCurrentLoop = function (sequence, phase) {
+    return new Tone.Sequence((time, note) => {
+        audio.instruments[audio.currentInstrument].synth.triggerAttackRelease(note, 0.1, time);
+        // subdivisions are given as subarrays
+    }, sequence).start(phase);
+}
+
+audio.startLoop = function (instrument, loop, div, phase) {
+    new Tone.Loop((time) => {
+        instrument.synth.triggerAttackRelease(loop, 0.1, time);
+    }, div).start(phase);
+}
+
+audio.startSequence = function (instrument, sequence, phase) {
+    var shifted = phase;
+    return new Tone.Sequence((time, note) => {
+        if (note!=0) {
+            //console.log(note + ' at ' + time + phase)
+            instrument.synth.triggerAttackRelease(note, 0.1, time + phase);
+            socket.emit('line', {note: note, duration: '0:3:0', userId: userId});
+        }
+        // subdivisions are given as subarrays
+    }, sequence).start();
+}
+
+audio.startPart = function (instrument, part, phase) {
+    return new Tone.Part(((time, note) => {
+        if (note != 0) {
+            instrument.synth.triggerAttackRelease(note, 0.1, time);
+        }
+    }), part).start(phase);
+}
+
+audio.getNotesTunejs = function (scale, intervals) {
+    tune.loadScale(scale);
+    return tune.chord(intervals);
+}
+
 audio.onPositionChanged = function(userXY, mouseXY) {
-    // audio.instruments[userId % sampleCount].panner.setPosition(usersPos[userId].x, usersPos[userId].y, 0)
+    audio.userInstruments[userId].panner.setPosition(userXY.x, userXY.y, 0)
 
     Tone.Listener.positionX = (userXY.x);
     Tone.Listener.positionY = (userXY.y);
+    Tone.Listener.forwardZ = -1
+
+    console.log('changd position')
+    // grainer.playbackRate = abs(map(mouseX, 0, width, 0.001, 0.5));
+    // grainer.overlap = abs(map(mouseX, 0, width, 0.001, 0.05));
+    //masterlpf.frequency.value = Math.abs(map(mouseXY.y, 0, HEIGHT, 200, 15000));
 }
 
 audio.onRoomJoined = function(userId, instrument, position, usersPos) {
@@ -107,18 +152,25 @@ audio.onRoomJoined = function(userId, instrument, position, usersPos) {
 
     audio.roomInstrumentName = instrument
 
-    if (audio.instruments[instrument]) {
-        audio.instruments[instrument].panner.setPosition(position.x, position.y, 0)
+    Object.keys(usersPos).forEach(i => {
+        var loadKeys = [0, 3, 5, 7, 8];
 
-        usersPos = msg.usersPos
-        Object.keys(usersPos).forEach(i => {
-            audio.instruments[i % audio.instruments.length].panner.setPosition(usersPos[i].x, usersPos[i].y, 0)
-        })
-    }
+        var marimba = audio.createInstrument(audio.roomInstrumentName, loadKeys);
+        audio.userInstruments[i] = marimba;
+        audio.userInstruments[i].panner.setPosition(usersPos[i].x, usersPos[i].y, 0)
+
+        console.log(i);
+        if (i == userId) {
+            console.log('self')
+            Tone.Listener.positionX = usersPos[i].x
+            Tone.Listener.positionY = usersPos[i].y
+            Tone.Listener.forwardZ = -1
+        }
+    })
 }
 
 audio.instruments = [];
-
+audio.userInstruments = {};
 audio.currentInstrument = 0;
 
 // add some effects

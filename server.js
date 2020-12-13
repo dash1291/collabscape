@@ -1,5 +1,6 @@
 // Setup basic express server
 var express = require('express');
+
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
@@ -21,20 +22,26 @@ var rooms = [{
     name: 'Ambient',
     instrument: 'marimba',
     maxUsers: 10,
-    currentUsers: 0
+    users: {}
   },
   {
     id: 1,
     name: 'Clicks',
     instrument: 'scw',
     maxUsers: 10,
-    currentUsers: 0
+    users: {}
   },
+  {
+    id: 2,
+    name: 'marimba',
+    instrument: 'marimba',
+    maxUsers: 10,
+    users: {}
+  }
 ];
 
 function getAvailableRoom() {
-  // Sends a random room id for now
-  return rooms.filter(r => r.maxUsers > r.currentUsers)[Math.floor(Math.random() * rooms.length)]
+  return rooms.filter(r => r.maxUsers > Object.keys(r.users).length)[Math.floor(Math.random() * rooms.length)]
 }
 
 function getRoom(roomId) {
@@ -58,34 +65,33 @@ io.on('connection', function (socket) {
 
   if (!socket.room) {
     allotedRoom = getAvailableRoom()
-    socket.room = allotedRoom.id
-    socket.join(allotedRoom.name);
+    socket.room = String(allotedRoom.id)
+    console.log('room', socket.room)
+
+    socket.join(socket.room);
   }
-    
-  socket.on('room', function(room) {
-    let roomId = Number(room) // just to be sure
-    allotedRoom = getRoom(roomId);
-    socket.room = roomId
-    socket.join(roomId);
-  })
 
   let pos = getRandomPosition();
-
-  usersPos[socket.userId] = pos;
-  socket.emit('welcome', {userId: socket.userId, position: pos, usersPos: usersPos, instrument: allotedRoom.instrument });
-  socket.to(socket.room).emit('join', {userId: socket.userId, position: pos, usersPos: usersPos});
+  allotedRoom.users[socket.userId] = pos
   
+  socket.emit('welcome', {userId: socket.userId, position: pos, room: allotedRoom });
+
+
+  socket.to(socket.room).emit('random', {});
+
+  socket.to(socket.room).emit('join', {userId: socket.userId, position: pos, room: allotedRoom });
+
   socket.on('line', function(obj) {
     socket.to(socket.room).emit('line', obj);
   });
   
   socket.on('disconnecting', () => {
-    delete usersPos[socket.userId]
+    delete allotedRoom.users[socket.userId]
     socket.to(socket.room).emit('leave', {userId: socket.userId})
   });
 
   socket.on('move', function(obj) {
     socket.to(socket.room).emit('move',obj)
-    usersPos[obj.userId]= obj.position
+    allotedRoom.users[obj.userId] = obj.position
   });
 });

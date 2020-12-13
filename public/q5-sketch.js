@@ -27,6 +27,8 @@ q5.draw = function () {
     // blink effect for each dot starts below
     Object.keys(usersPos).forEach(i => {
         let r = 0
+        //console.log(i)
+        //console.log(usersPos)
         let playedSince = ((+new Date()) - (usersPos[i].playedAt || 0));
         if (playedSince > 100 || playedSince < 0) {
             r = 10
