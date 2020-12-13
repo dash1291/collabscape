@@ -1,7 +1,7 @@
 Tone.Transport.bpm.value = 90;
 var sampleCount = 13;
 
-let sequences = ["0 3", "~ 5 ~", "12 ~ 7 ~ 8", "24 24 ~"];
+let sequences = ["0 3", "~ 5 ~", "12 ~ 7 ~ 8", "24 24 ~", "~ 7 ~ 5 ~ 7 ~"];
 let pattern = [0, 2, 4, 5, 7, 9, 11];
 let tracks = [];
 let trackCount = 8;
@@ -9,9 +9,8 @@ let trackCount = 8;
 function startComposition() {
     let loadKeys = [0, 3, 5, 7, 8];
 
-    let marimba = audio.createInstrument(audio.roomInstrumentName, loadKeys);
-    //var marimba = audio.getRoomInstrument(loadKeys)
-    audio.instruments.push(marimba);
+    // Make a new instrument
+    audio.instruments.push(audio.createInstrument('marimba', loadKeys));
 
     let tunerRand = function (num) {
         let tunes = ['ji_12', 'slendro', 'jorgensen', 'jousse', 'jousse2', 'balafon', 'bolivia', 'burma3', 'hammond', 'helmholtz', 'hirajoshi', 'hummel', 'rousseauw', 'tamil', 'turkish_bagl'];
@@ -20,8 +19,8 @@ function startComposition() {
 
     for (let index = 0; index <= trackCount; index++) {
         tracks[index] = new Track(tunerRand());
-        tracks[index].synth = marimba.synth;
-        tracks[index].addSequence(sequences[modulo(index, 4)]);
+        tracks[index].synth = audio.instruments[0].synth;
+        tracks[index].addSequence(sequences[modulo(index, sequences.length)]);
     }
     
     tracks[0].start();
