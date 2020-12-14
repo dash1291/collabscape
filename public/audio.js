@@ -53,6 +53,7 @@ audio.loadFolder = function (folderName, sampleList) {
             panningModel: "HRTF",
             positionX: 0,
             positionY: 0,
+            positionZ: 0,
             refDistance: 0.1
         })
 
@@ -76,6 +77,7 @@ audio.loadNumberedFolder = function(folderName, sampleCount) {
             panningModel: "HRTF",
             positionX: 0,
             positionY: 0,
+            positionZ: 0,
             refDistance: 0.1
         })
 
@@ -94,9 +96,9 @@ audio.loadNumberedFolder = function(folderName, sampleCount) {
 audio.onPositionChanged = function(userXY, mouseXY) {
     audio.userInstruments[userId].panner.setPosition(userXY.x, userXY.y, 0)
 
-    Tone.Listener.positionX = (userXY.x);
-    Tone.Listener.positionY = (userXY.y);
-    Tone.Listener.forwardZ = -1
+    Tone.Listener.positionX.value = (userXY.x);
+    Tone.Listener.positionY.value = (userXY.y);
+    Tone.Listener.forwardZ.value = -1
 
     console.log('changd position')
     // grainer.playbackRate = abs(map(mouseX, 0, width, 0.001, 0.5));
@@ -105,9 +107,9 @@ audio.onPositionChanged = function(userXY, mouseXY) {
 }
 
 audio.onRoomJoined = function(userId, instrument, position, usersPos) {
-    Tone.Listener.positionX = position.x;
-    Tone.Listener.positionY = position.y
-    Tone.Listener.forwardZ = -1
+    Tone.Listener.positionX.value = position.x;
+    Tone.Listener.positionY.value = position.y
+    Tone.Listener.forwardZ.value = -1
 
     audio.roomInstrumentName = instrument
 
@@ -123,9 +125,9 @@ audio.onRoomJoined = function(userId, instrument, position, usersPos) {
         console.log(i);
         if (i == userId) {
             console.log('self')
-            Tone.Listener.positionX = usersPos[i].x
-            Tone.Listener.positionY = usersPos[i].y
-            Tone.Listener.forwardZ = -1
+            Tone.Listener.positionX.value = usersPos[i].x
+            Tone.Listener.positionY.value = usersPos[i].y
+            Tone.Listener.forwardZ.value = -1
         }
     })
 }

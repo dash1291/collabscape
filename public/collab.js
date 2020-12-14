@@ -1,5 +1,9 @@
 // this is like a handshake or init event
-var socket = assetPaths.length ? io.connect('https://collab-noisescape.glitch.me') : io.connect();
+
+var socket = assetPaths.length ? io.connect('68.183.90.165:3000') : io.connect();
+
+//var socket = io.connect('https://collab-noisescape.glitch.me');
+
 var userId;
 var usersPos = {};
 
@@ -74,6 +78,7 @@ socket.on('line', msg => {
 // this is emitted when another peer moves
 socket.on('move', msg => {
   console.log(msg.userId + ": moved to " + msg.position)
+  console.log(msg.position)
   var thisUser = msg.userId
   usersPos[thisUser] = msg.position;
   audio.userInstruments[thisUser].panner.setPosition(msg.position.x, msg.position.y, 0)
