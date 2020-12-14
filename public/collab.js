@@ -1,8 +1,8 @@
 // this is like a handshake or init event
 
-var socket = assetPaths.length ? io.connect('68.183.90.165:3000') : io.connect('68.183.90.165:3000');
+// var socket = assetPaths.length ? io.connect('68.183.90.165:3000') : io.connect('68.183.90.165:3000');
 
-//var socket = io.connect('https://collab-noisescape.glitch.me');
+var socket = io.connect('https://do.ashishdubey.xyz');
 
 var userId;
 var usersPos = {};

@@ -160,6 +160,8 @@ document.onclick = function () {
     if (Tone.context.state !== 'running') {
         Tone.context.resume();
     }
+    let spaced = document.querySelector('.spaced');
+    spaced.hidden = true;
     Tone.Transport.start();
     audio.isPlaying = true;
 }

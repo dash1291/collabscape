@@ -1,5 +1,12 @@
 .spaced {
-  margin: 16px;
+  background-color: #faebdd;
+  position: fixed;
+  left: 50vw;
+  height: 20vh;
+  padding: 100px;
+  top: 50vh;
+  width: 40vw;
+  z-index: 10;
 }
 
 #sketchCanvas {
