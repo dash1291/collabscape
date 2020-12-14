@@ -1,6 +1,6 @@
 // this is like a handshake or init event
 
-var socket = assetPaths.length ? io.connect('68.183.90.165:3000') : io.connect();
+var socket = assetPaths.length ? io.connect('68.183.90.165:3000') : io.connect('68.183.90.165:3000');
 
 //var socket = io.connect('https://collab-noisescape.glitch.me');
 
@@ -52,6 +52,10 @@ socket.on('welcome', msg => {
 });
 
 
+function getTrackForUser(userId) {
+  return Object.keys(usersPos).findIndex(userId);
+}
+
 // this is emitted when another peer joins
 socket.on('join', msg => {
   var thisUser = msg.userId
@@ -62,7 +66,8 @@ socket.on('join', msg => {
 
   var loadKeys = [0, 3, 5, 7, 8];
   var marimba = audio.createInstrument(audio.roomInstrumentName, loadKeys);
-  audio.userInstruments[thisUser] = tracks[thisUser % tracks.length]
+
+  audio.userInstruments[thisUser] = tracks[getTrackForUser(thisUser)]
   audio.userInstruments[thisUser].panner.setPosition(msg.position.x, msg.position.y, 0)
 });
 

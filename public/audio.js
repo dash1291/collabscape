@@ -119,7 +119,7 @@ audio.onRoomJoined = function(userId, instrument, position, usersPos) {
         /*var marimba = audio.createInstrument(audio.roomInstrumentName, loadKeys);
         audio.userInstruments[i] = marimba;
         */
-        audio.userInstruments[i] = tracks[i % tracks.length]
+        audio.userInstruments[i] = tracks[getTrackForUser(i)]
         audio.userInstruments[i].panner.setPosition(usersPos[i].x, usersPos[i].y, 0)
 
         console.log(i);

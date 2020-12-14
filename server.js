@@ -21,7 +21,7 @@ var rooms = [{
     id: 0,
     name: 'Ambient',
     instrument: 'marimba',
-    maxUsers: 4,
+    maxUsers: 10,
     users: {}
   },
   /*{
@@ -34,7 +34,13 @@ var rooms = [{
 ];
 
 function getAvailableRoom() {
-  return rooms.filter(r => r.maxUsers > Object.keys(r.users).length)[Math.floor(Math.random() * rooms.length)]
+  var availableRooms = rooms.filter(r => r.maxUsers > Object.keys(r.users).length)
+  
+  if (availableRooms.length > 0) {
+    return availableRooms[Math.floor(Math.random() * availableRooms.length)]
+  } else {
+    return rooms[Math.floor(Math.random() * rooms.length)]
+  }
 }
 
 function getRoom(roomId) {

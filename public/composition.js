@@ -27,11 +27,11 @@ function startComposition() {
         tracks[index].addSequence(sequences[modulo(index, 4)]);
     }
     
-    tracks[0].start();
-    tracks[1].start('4m');
+    /*tracks[0].start();
+    //tracks[1].start('4m');
     tracks[2].start('8m');
     tracks[3].start('12m');
-
+    */
     // tracks[1].loadScale(tunerRand());
     // tracks[1].addPattern(pattern);
     // tracks[1].addSequences(sequences);
