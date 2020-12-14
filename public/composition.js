@@ -24,7 +24,6 @@ function startComposition() {
         let instrument = audio.createInstrument('marimba', loadKeys);
         tracks[index].synth = instrument.synth;
         tracks[index].panner = instrument.panner;
-        //tracks[index].synth = 
         tracks[index].addSequence(sequences[modulo(index, 4)]);
     }
     

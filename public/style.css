@@ -1,63 +1,18 @@
-/* CSS files add styling rules to your content */
-
-body {
-  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
-  margin: 2em;
-  background-color: #103040;
-  color: #ccc;
-}
-
-html,
-body {
-  height: 100%;
-}
-
-h1 {
-  font-style: italic;
-  color: #373fff;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-
-  /* This centers our sketch horizontally. */
-  justify-content: center;
-
-  /* This centers our sketch vertically. */
-  align-items: center;
+.spaced {
+  margin: 16px;
 }
 
 #sketchCanvas {
   display: block;
-  position: absolute;
+  position: fixed;
   top: 10px;
   left: 10px;
   z-index: -10;
 }
 
-.spaced {
-  margin: 16px;
-}
-
-.toolbox__item {
-  font-size: 14px;
-  cursor: pointer;
-  padding: 16px;
-  border: none;
-  background: #333;
-  color: #ccc;
-}
-
-.toolbox__item--selected {
-  color: #333;
-  background: #ccc;
-}
-
 #hydraCanvas {
   display: block;
-  position: absolute;
+  position: fixed;
   top: 10px;
   left: 10px;
   z-index: 10;

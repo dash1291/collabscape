@@ -48,14 +48,13 @@ q5.draw = function () {
         q5.line(usersPos[i].x * WIDTH, usersPos[i].y * HEIGHT, usersPos[userId].x * WIDTH, usersPos[userId].y * HEIGHT)
         q5.noStroke();
         // q5.text(usersPos[i].x + ' x ' + usersPos[i].y, usersPos[i].x * WIDTH, usersPos[i].y * HEIGHT);
-
     })
 
     if (tracks[0] !== 'undefined') {
         q5.fill(255);
         q5.textSize(50);
         q5.textAlign(q5.CENTER, q5.CENTER);
-        q5.text(tracks[0].currentNote, WIDTH / 2, HEIGHT / 2);
+        // q5.text(tracks[0].currentNote, WIDTH / 2, HEIGHT / 2);
     }
 
     // movement

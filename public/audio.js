@@ -41,7 +41,6 @@ audio.createInstrument = function (folderName, loadKeys) {
         duration: '4:0',
         panner: panner,
         lpf,
-        lpf
     };
 }
 
@@ -64,7 +63,6 @@ audio.loadFolder = function (folderName, sampleList) {
             duration: '0:2',
             panner: panner,
             lpf,
-            lpf
         });
     }
 }
@@ -88,48 +86,9 @@ audio.loadNumberedFolder = function(folderName, sampleCount) {
             duration: '0:2',
             panner: panner,
             lpf,
-            lpf
         });
     }
     console.log("Loaded samples from: "+folderName)
-}
-
-audio.startCurrentLoop = function (sequence, phase) {
-    return new Tone.Sequence((time, note) => {
-        audio.instruments[audio.currentInstrument].synth.triggerAttackRelease(note, 0.1, time);
-        // subdivisions are given as subarrays
-    }, sequence).start(phase);
-}
-
-audio.startLoop = function (instrument, loop, div, phase) {
-    new Tone.Loop((time) => {
-        instrument.synth.triggerAttackRelease(loop, 0.1, time);
-    }, div).start(phase);
-}
-
-audio.startSequence = function (instrument, sequence, phase) {
-    var shifted = phase;
-    return new Tone.Sequence((time, note) => {
-        if (note!=0) {
-            //console.log(note + ' at ' + time + phase)
-            instrument.synth.triggerAttackRelease(note, 0.1, time + phase);
-            socket.emit('line', {note: note, duration: '0:3:0', userId: userId});
-        }
-        // subdivisions are given as subarrays
-    }, sequence).start();
-}
-
-audio.startPart = function (instrument, part, phase) {
-    return new Tone.Part(((time, note) => {
-        if (note != 0) {
-            instrument.synth.triggerAttackRelease(note, 0.1, time);
-        }
-    }), part).start(phase);
-}
-
-audio.getNotesTunejs = function (scale, intervals) {
-    tune.loadScale(scale);
-    return tune.chord(intervals);
 }
 
 audio.onPositionChanged = function(userXY, mouseXY) {

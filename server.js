@@ -31,13 +31,6 @@ var rooms = [{
     maxUsers: 10,
     users: {}
   },*/
-  /*{
-    id: 2,
-    name: 'marimba',
-    instrument: 'marimba',
-    maxUsers: 10,
-    users: {}
-  }*/
 ];
 
 function getAvailableRoom() {
