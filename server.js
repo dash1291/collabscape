@@ -21,23 +21,23 @@ var rooms = [{
     id: 0,
     name: 'Ambient',
     instrument: 'marimba',
-    maxUsers: 10,
+    maxUsers: 4,
     users: {}
   },
-  {
+  /*{
     id: 1,
     name: 'Clicks',
     instrument: 'scw',
     maxUsers: 10,
     users: {}
-  },
-  {
+  },*/
+  /*{
     id: 2,
     name: 'marimba',
     instrument: 'marimba',
     maxUsers: 10,
     users: {}
-  }
+  }*/
 ];
 
 function getAvailableRoom() {
@@ -75,9 +75,6 @@ io.on('connection', function (socket) {
   allotedRoom.users[socket.userId] = pos
   
   socket.emit('welcome', {userId: socket.userId, position: pos, room: allotedRoom });
-
-
-  socket.to(socket.room).emit('random', {});
 
   socket.to(socket.room).emit('join', {userId: socket.userId, position: pos, room: allotedRoom });
 

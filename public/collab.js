@@ -29,6 +29,8 @@ function readURL() {
 readURL();
 
 socket.on('welcome', msg => {
+  startComposition(msg.room.currentUsers);
+
   userId = msg.userId;
 
   usersPos = msg.room.users
@@ -46,10 +48,8 @@ socket.on('welcome', msg => {
 
   console.log(msg.room);
   audio.onRoomJoined(userId, msg.room.instrument, msg.position, usersPos)
-  startComposition(msg.room.currentUsers);
 });
 
-socket.on('random', msg => console.log('randooooooooomm'))
 
 // this is emitted when another peer joins
 socket.on('join', msg => {
@@ -57,9 +57,11 @@ socket.on('join', msg => {
   console.log(thisUser + ": joined us");
   usersPos[thisUser] = msg.position;
   usersPos = msg.room.users
+
+
   var loadKeys = [0, 3, 5, 7, 8];
   var marimba = audio.createInstrument(audio.roomInstrumentName, loadKeys);
-  audio.userInstruments[thisUser] = marimba;
+  audio.userInstruments[thisUser] = tracks[thisUser % tracks.length]
   audio.userInstruments[thisUser].panner.setPosition(msg.position.x, msg.position.y, 0)
 });
 

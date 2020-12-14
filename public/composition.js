@@ -9,11 +9,10 @@ let trackCount = 8;
 function startComposition() {
     let loadKeys = [0, 3, 5, 7, 8];
 
-
-    var marimba = audio.userInstruments[userId]
+    //var marimba = audio.userInstruments[userId]
 
     //var marimba = audio.getRoomInstrument(loadKeys)
-    audio.instruments.push(marimba);
+    //audio.instruments.push(marimba);
 
     let tunerRand = function (num) {
         let tunes = ['ji_12', 'slendro', 'jorgensen', 'jousse', 'jousse2', 'balafon', 'bolivia', 'burma3', 'hammond', 'helmholtz', 'hirajoshi', 'hummel', 'rousseauw', 'tamil', 'turkish_bagl'];
@@ -22,7 +21,10 @@ function startComposition() {
 
     for (let index = 0; index <= trackCount; index++) {
         tracks[index] = new Track(tunerRand());
-        tracks[index].synth = marimba.synth;
+        let instrument = audio.createInstrument('marimba', loadKeys);
+        tracks[index].synth = instrument.synth;
+        tracks[index].panner = instrument.panner;
+        //tracks[index].synth = 
         tracks[index].addSequence(sequences[modulo(index, 4)]);
     }
     
