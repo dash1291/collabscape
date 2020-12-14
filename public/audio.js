@@ -100,32 +100,43 @@ audio.onPositionChanged = function(userXY, mouseXY) {
     Tone.Listener.positionY.value = (userXY.y);
     Tone.Listener.forwardZ.value = -1
 
-    console.log('changd position')
+    console.log('changed position')
     // grainer.playbackRate = abs(map(mouseX, 0, width, 0.001, 0.5));
     // grainer.overlap = abs(map(mouseX, 0, width, 0.001, 0.05));
     //masterlpf.frequency.value = Math.abs(map(mouseXY.y, 0, HEIGHT, 200, 15000));
 }
 
 audio.onRoomJoined = function(userId, instrument, position, usersPos) {
-    Tone.Listener.positionX.value = position.x;
-    Tone.Listener.positionY.value = position.y
-    Tone.Listener.forwardZ.value = -1
+    let allUsers = {};
+    if (usersPos === null) { 
+        allUsers[userId] = position
+    } else {
+        allUsers = usersPos
+    }
 
-    audio.roomInstrumentName = instrument
 
-    Object.keys(usersPos).forEach(i => {
-        audio.userInstruments[i] = tracks[getTrackForUser(i)]
+    Object.keys(allUsers).forEach(i => {
+        let trackNumber = getTrackForUser(i)
+        audio.userInstruments[i] = tracks[trackNumber]
+        composition.handleTrackStart(trackNumber)
+
         tracks[getTrackForUser(i)].start()
-        audio.userInstruments[i].panner.setPosition(usersPos[i].x, usersPos[i].y, 0)
+        audio.userInstruments[i].panner.setPosition(allUsers[i].x, allUsers[i].y, 0)
 
-        console.log(i);
-        if (i == userId) {
-            console.log('self')
-            Tone.Listener.positionX.value = usersPos[i].x
-            Tone.Listener.positionY.value = usersPos[i].y
+        if (i === String(userId)) {
+            audio.roomInstrumentName = instrument
+            Tone.Listener.positionX.value = allUsers[i].x
+            Tone.Listener.positionY.value = allUsers[i].y
             Tone.Listener.forwardZ.value = -1
         }
     })
+}
+
+audio.onUserLeftRoom = function(userId) {
+    console.error(getTrackForUser(userId))
+
+    composition.handleTrackStop(getTrackForUser(userId))
+    delete audio.userInstruments[userId];
 }
 
 audio.instruments = [];

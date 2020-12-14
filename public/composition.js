@@ -6,8 +6,19 @@ let pattern = [0, 2, 4, 5, 7, 9, 11];
 let tracks = [];
 let trackCount = 8;
 
-function startComposition() {
-    
+var composition = {}
+
+composition.handleTrackStart = function(trackNumber) {
+    tracks[trackNumber].start()
+}
+
+composition.handleTrackStop = function(trackNumber){
+    tracks[trackNumber].stop()
+}
+
+composition.startComposition = function(instrumentName) {
+    let loadKeys = [0, 3, 5, 7, 8];
+
     let tunerRand = function (num) {
         let tunes = ['ji_12', 'slendro', 'jorgensen', 'jousse', 'jousse2', 'balafon', 'bolivia', 'burma3', 'hammond', 'helmholtz', 'hirajoshi', 'hummel', 'rousseauw', 'tamil', 'turkish_bagl'];
         return tunes[Math.floor(Math.random() * tunes.length)];
@@ -15,18 +26,14 @@ function startComposition() {
     
     for (let index = 0; index <= trackCount; index++) {
         tracks[index] = new Track(tunerRand());
-        let loadKeys = [0, 3, 5, 7, 8];
-        let instrument = audio.createInstrument('marimba', loadKeys);
+
+        let instrument = audio.createInstrument(instrumentName, loadKeys);
         tracks[index].synth = instrument.synth;
         tracks[index].panner = instrument.panner;
         tracks[index].addSequence(sequences[modulo(index, 4)]);
     }
     
-    /*tracks[0].start();
-    tracks[1].start('4m');
-    tracks[2].start('8m');
-    tracks[3].start('12m');*/
-    
+
     // tracks[1].loadScale(tunerRand());
     // tracks[1].addPattern(pattern);
     // tracks[1].addSequences(sequences);

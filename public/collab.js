@@ -30,10 +30,7 @@ function readURL() {
 readURL();
 
 socket.on('welcome', msg => {
-  startComposition(msg.room.currentUsers);
-
   userId = msg.userId;
-
   usersPos = msg.room.users
   console.log('userspos ', usersPos)
   usersPos[userId].playedAt = 0;
@@ -48,12 +45,13 @@ socket.on('welcome', msg => {
   }
 
   console.log(msg.room);
+  composition.startComposition(msg.room.instrument);
   audio.onRoomJoined(userId, msg.room.instrument, msg.position, usersPos)
 });
 
 
 function getTrackForUser(userId) {
-  return Object.keys(usersPos).findIndex(u => u === userId);
+  return Object.keys(usersPos).findIndex(u => u === String(userId));
 }
 
 // this is emitted when another peer joins
@@ -63,9 +61,7 @@ socket.on('join', msg => {
   usersPos[thisUser] = msg.position;
   usersPos = msg.room.users
 
-  audio.userInstruments[thisUser] = tracks[getTrackForUser(thisUser)]
-  tracks[getTrackForUser(thisUser)].start()
-  audio.userInstruments[thisUser].panner.setPosition(msg.position.x, msg.position.y, 0)
+  audio.onRoomJoined(thisUser, msg.room.instrument, msg.position, null)
 });
 
 // this is emitted when another peer sends their melody
@@ -90,7 +86,7 @@ socket.on('move', msg => {
 socket.on('leave', msg => {
   console.log(msg.userId + ": left")
   var thisUser = msg.userId
-  delete audio.userInstruments[thisUser];
+  audio.onUserLeftRoom(thisUser);
   delete usersPos[thisUser];
 });
 
