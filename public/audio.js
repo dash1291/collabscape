@@ -94,7 +94,7 @@ audio.loadNumberedFolder = function(folderName, sampleCount) {
 }
 
 audio.onPositionChanged = function(userXY, mouseXY) {
-    audio.userInstruments[userId].panner.setPosition(userXY.x, userXY.y, 0)
+    audio.userInstruments[userId].track.panner.setPosition(userXY.x, userXY.y, 0)
 
     Tone.Listener.positionX.value = (userXY.x);
     Tone.Listener.positionY.value = (userXY.y);
@@ -116,12 +116,11 @@ audio.onRoomJoined = function(userId, instrument, position, usersPos) {
 
 
     Object.keys(allUsers).forEach(i => {
-        let trackNumber = getTrackForUser(i)
-        audio.userInstruments[i] = tracks[trackNumber]
-        composition.handleTrackStart(trackNumber)
+        //let trackNumber = getTrackForUser(i)
+        audio.userInstruments[i] = composition.handleTrackStart(instrument)
 
         tracks[getTrackForUser(i)].start()
-        audio.userInstruments[i].panner.setPosition(allUsers[i].x, allUsers[i].y, 0)
+        audio.userInstruments[i].track.panner.setPosition(allUsers[i].x, allUsers[i].y, 0)
 
         if (i === String(userId)) {
             audio.roomInstrumentName = instrument
@@ -133,9 +132,8 @@ audio.onRoomJoined = function(userId, instrument, position, usersPos) {
 }
 
 audio.onUserLeftRoom = function(userId) {
-    console.error(getTrackForUser(userId))
-
-    composition.handleTrackStop(getTrackForUser(userId))
+    //console.error(getTrackForUser(userId))
+    composition.handleTrackStop(audio.userInstruments[userId].trackNumber)
     delete audio.userInstruments[userId];
 }
 

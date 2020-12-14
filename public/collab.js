@@ -1,5 +1,6 @@
 // this is like a handshake or init event
 
+
 // var socket = assetPaths.length ? io.connect('68.183.90.165:3000') : io.connect('68.183.90.165:3000');
 
 var socket = io.connect('https://do.ashishdubey.xyz');
@@ -70,7 +71,7 @@ socket.on('line', msg => {
   let duration = msg.duration;
   usersPos[msg.userId].playedAt = +new Date()
 
-  audio.userInstruments[msg.userId].synth.triggerAttackRelease(note, duration)
+  audio.userInstruments[msg.userId].track.synth.triggerAttackRelease(note, duration)
 });
 
 // this is emitted when another peer moves
@@ -79,7 +80,7 @@ socket.on('move', msg => {
   console.log(msg.position)
   var thisUser = msg.userId
   usersPos[thisUser] = msg.position;
-  audio.userInstruments[thisUser].panner.setPosition(msg.position.x, msg.position.y, 0)
+  audio.userInstruments[thisUser].track.panner.setPosition(msg.position.x, msg.position.y, 0)
 });
 
 // this is emitted when another peer leaves \o

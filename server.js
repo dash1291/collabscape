@@ -24,13 +24,55 @@ var rooms = [{
     maxUsers: 10,
     users: {}
   },
-  /*{
+  {
     id: 1,
+    name: 'Ambient',
+    instrument: 'marimba',
+    maxUsers: 10,
+    users: {}
+  },
+  {
+    id: 2,
+    name: 'Ambient',
+    instrument: 'marimba',
+    maxUsers: 10,
+    users: {}
+  },
+  {
+    id: 3,
+    name: 'Ambient',
+    instrument: 'marimba',
+    maxUsers: 10,
+    users: {}
+  },
+  /*{
+    id: 4,
     name: 'Clicks',
     instrument: 'scw',
     maxUsers: 10,
     users: {}
   },*/
+  {
+    id: 5,
+    name: 'Ambient',
+    instrument: 'marimba',
+    maxUsers: 10,
+    users: {}
+  },
+  {
+    id: 6,
+    name: 'Ambient',
+    instrument: 'marimba',
+    maxUsers: 10,
+    users: {}
+  },
+  {
+    id: 7,
+    name: 'Ambient',
+    instrument: 'marimba',
+    maxUsers: 10,
+    users: {}
+  },
 ];
 
 function getAvailableRoom() {
