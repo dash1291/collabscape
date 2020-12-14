@@ -76,6 +76,8 @@ var rooms = [{
 ];
 
 function getAvailableRoom() {
+  // Returns the most crowded room among the rooms with available slots.
+  // If no room is available then return the room with least number of people
   var availableRooms = rooms.filter(r => r.maxUsers > Object.keys(r.users).length)
   
   if (availableRooms.length > 0) {
