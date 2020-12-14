@@ -61,6 +61,6 @@ if (isMobile == false) {
         // .add(visFX.src(visFX.o1).kaleid().scale(() => (0.5 * 0.125 + 0.1)), 0.15)
         // .add(visFX.src(visFX.o1).kaleid().scale(() => (0.4 * 0.0125 + 0.1)), 0.25)
         .blend(visFX.src(visFX.o0).rotate(1.57), 0.125)
-        .blend(visFX.src(visFX.o0).scale(() => Math.cos(time / 4)).brightness(() => Math.sin(time / 2) * 2 - 1), 0.25)
+        //.blend(visFX.src(visFX.o0).scale(() => Math.cos(time / 4)).brightness(() => Math.sin(time / 2) * 2 - 1), 0.25)
         .out()
 }
