@@ -63,10 +63,6 @@ socket.on('join', msg => {
   usersPos[thisUser] = msg.position;
   usersPos = msg.room.users
 
-
-  var loadKeys = [0, 3, 5, 7, 8];
-  var marimba = audio.createInstrument(audio.roomInstrumentName, loadKeys);
-
   audio.userInstruments[thisUser] = tracks[getTrackForUser(thisUser)]
   tracks[getTrackForUser(thisUser)].start()
   audio.userInstruments[thisUser].panner.setPosition(msg.position.x, msg.position.y, 0)
