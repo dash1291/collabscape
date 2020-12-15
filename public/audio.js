@@ -158,7 +158,7 @@ document.onclick = function () {
     if (Tone.context.state !== 'running') {
         Tone.context.resume();
     }
-    let spaced = document.querySelector('.spaced');
+    let spaced = document.getElementById("notif");
     spaced.hidden = true;
     Tone.Transport.start();
     audio.isPlaying = true;

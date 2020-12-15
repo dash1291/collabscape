@@ -2,6 +2,7 @@ let WIDTH = window.innerWidth - 20;
 let HEIGHT = window.innerHeight - 20;
 let bgColor = '#333'
 let lastTransmittedPos = {}
+let moveDirection = '';
 
 let q5 = new Q5();
 
@@ -14,6 +15,12 @@ q5.setup = function () {
     q5.textFont('Helvetica');
     q5.textSize(16);
     q5.textAlign(q5.CENTER, q5.CENTER);
+
+    var hammer = new Hammer(document.body, { preventDefault: true });
+    hammer.on("panleft panright panup pandown tap press", function (ev) {
+        moveDirection = ev.type;
+        document.getElementById("notif").textContent = ev.type + " gesture detected.";
+    });
 }
 
 q5.draw = function () {
@@ -55,19 +62,19 @@ q5.draw = function () {
     }
 
     // movement
-    if (q5.keyIsDown(q5.UP_ARROW)) {
+    if (q5.keyIsDown(q5.UP_ARROW) || moveDirection == 'panup') {
         usersPos[userId].y = Math.max(usersPos[userId].y - 10 / HEIGHT, 0)
     }
 
-    if (q5.keyIsDown(q5.DOWN_ARROW)) {
+    if (q5.keyIsDown(q5.DOWN_ARROW) || moveDirection == 'pandown') {
         usersPos[userId].y = Math.min(usersPos[userId].y + 10 / HEIGHT, 1)
     }
 
-    if (q5.keyIsDown(q5.LEFT_ARROW)) {
+    if (q5.keyIsDown(q5.LEFT_ARROW) || moveDirection == 'panleft') {
         usersPos[userId].x = Math.max(usersPos[userId].x - 10 / WIDTH, 0)
     }
 
-    if (q5.keyIsDown(q5.RIGHT_ARROW)) {
+    if (q5.keyIsDown(q5.RIGHT_ARROW) || moveDirection == 'panright') {
         usersPos[userId].x = Math.min(usersPos[userId].x + 10 / WIDTH, 1)
     }
 }
