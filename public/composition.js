@@ -1,7 +1,7 @@
 Tone.Transport.bpm.value = 90;
 var sampleCount = 13;
 
-let sequences = ["0 3", "~ 5 ~", "12 ~ 7 ~ 8", "24 24 ~"];
+let sequences = ["0 3", "~ 5 ~", "12 ~ 7 ~ 8", "~ 12 ~ 12 ~", "3 5 ~ 8", "8 ~ 7 ~", "0 7 12 19 24 31 36 43"];
 // let pattern = [0, 2, 4, 5, 7, 9, 11];
 let pattern = [0, 3, 5, 7, 8, 12, 24];
 let loadKeys = [0, 3, 5, 7, 8];
@@ -20,7 +20,7 @@ composition.handleTrackStart = function(instrumentName) {
     let instrument = audio.createInstrument(instrumentName, loadKeys);
     track.synth = instrument.synth;
     track.panner = instrument.panner;
-    track.addSequence(sequences[modulo(tracks.length - 1, 4)]);
+    track.addSequence(sequences[modulo(tracks.length - 1, sequences.length)]);
     
     let index = tracks.length;
 
@@ -96,7 +96,7 @@ let bassFreq = 32;
 const feedbackDelay = new Tone.FeedbackDelay("8n", 0.8).toDestination();
 const padlpf = new Tone.Filter(3000, "lowpass").connect(feedbackDelay);
 
-for (let i = 0; i < 4; i++) {
+for (let i = 0; i < 5; i++) {
     oscillators.push(new Tone.Oscillator({
         frequency: bassFreq * i,
         type: "sawtooth4",

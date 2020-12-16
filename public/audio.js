@@ -26,7 +26,7 @@ audio.createInstrument = function (folderName, loadKeys) {
         urls: urls,
         baseUrl: assetPaths + '/sounds/' + folderName + '/',
     });
-    let lpf = new Tone.Filter(20000, "lowpass").connect(masterlpf);
+    let lpf = new Tone.Filter(20000, "lowpass").connect(instrumentBus);
     let panner = new Tone.Panner3D({
         panningModel: "HRTF",
         positionX: 0,
@@ -48,7 +48,7 @@ audio.loadFolder = function (folderName, sampleList) {
     for (let i = sampleList.count; i > 0; i--) {
         let newInst = audio.createSampler(sampleList[i], 'sounds/'+folderName);
         // newInst.volume.value = -6;
-        let lpf = new Tone.Filter(20000, "lowpass").connect(masterlpf);
+        let lpf = new Tone.Filter(20000, "lowpass").connect(instrumentBus);
         let panner = new Tone.Panner3D({
             panningModel: "HRTF",
             positionX: 0,
@@ -72,7 +72,7 @@ audio.loadNumberedFolder = function(folderName, sampleCount) {
     for (let i = sampleCount; i > 0; i--) {
         let newInst = audio.createSampler(i, 'sounds/' + folderName);
         // newInst.volume.value = -6;
-        let lpf = new Tone.Filter(12000, "lowpass").connect(masterlpf);
+        let lpf = new Tone.Filter(12000, "lowpass").connect(instrumentBus);
         let panner = new Tone.Panner3D({
             panningModel: "HRTF",
             positionX: 0,
@@ -146,6 +146,7 @@ reverb.generate();
 reverb.connect(Tone.context.destination);
 
 let masterlpf = new Tone.Filter(20000, "lowpass").connect(reverb);
+let instrumentBus = new Tone.PingPongDelay("3n", 0.2).connect(masterlpf);
 
 window.onload = function () {
     console.log('Loaded!');
@@ -155,7 +156,7 @@ document.onclick = function () {
         Tone.context.resume();
     }
     let spaced = document.getElementById("notif");
-    spaced.hidden = true;
+    spaced.className = 'hide';
     Tone.Transport.start();
     audio.isPlaying = true;
 }
