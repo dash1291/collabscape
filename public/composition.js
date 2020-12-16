@@ -63,7 +63,8 @@ composition.handleTrackStop = function(trackNumber){
 }
 
 composition.startComposition = function(instrumentName, numTracks) {
-    
+    randomInterval = setInterval('randomSounds();', rand);
+
     // tracks[1].loadScale(tunerRand());
     // tracks[1].addPattern(pattern);
     // tracks[1].addSequences(sequences);
@@ -126,7 +127,7 @@ function doSomethingInteresting() {
         // bassFreq = tracks[0].scale.note(48 + Math.round(Math.random() * 16))
         bassFreq = tracks[0].scale.note(36 + pattern[Math.round(Math.random() * (pattern.length - 1))])
     }
-    document.getElementById("notif").textContent = bassFreq;
+    //document.getElementById("notif").textContent = bassFreq;
     oscillators.forEach((osc, i) => {
         // osc.frequency.rampTo(bassFreq * i * Math.round(Math.random()), 0.4);
         osc.frequency.rampTo(bassFreq * i, "6m");
