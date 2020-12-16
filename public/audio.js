@@ -101,9 +101,6 @@ audio.onPositionChanged = function(userXY, mouseXY) {
     Tone.Listener.forwardZ.value = -1
 
     console.log('changed position')
-    // grainer.playbackRate = abs(map(mouseX, 0, width, 0.001, 0.5));
-    // grainer.overlap = abs(map(mouseX, 0, width, 0.001, 0.05));
-    //masterlpf.frequency.value = Math.abs(map(mouseXY.y, 0, HEIGHT, 200, 15000));
 }
 
 audio.onRoomJoined = function(userId, instrument, position, usersPos) {

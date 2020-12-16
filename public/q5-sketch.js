@@ -97,6 +97,7 @@ setInterval(() => {
         })
 
         socket.onPositionChanged(userXY);
+        masterlpf.frequency.value = Math.abs(q5.map(usersPos[userId].y, 1, 0, 500, 18000));
 
         lastTransmittedPos = {
             x: usersPos[userId].x,
