@@ -1,12 +1,13 @@
 // this is like a handshake or init event
 
-
 // var socket = assetPaths.length ? io.connect('68.183.90.165:3000') : io.connect('68.183.90.165:3000');
 
 var socket = io.connect('https://do.ashishdubey.xyz');
 
 var userId;
 var usersPos = {};
+var currentRoom = null;
+var artificialNodes = 0;
 
 // assign room if none is assigned
 function assignRoom() {
@@ -33,19 +34,17 @@ readURL();
 socket.on('welcome', msg => {
   userId = msg.userId;
   usersPos = msg.room.users
-  console.log('userspos ', usersPos)
   usersPos[userId].playedAt = 0;
   currentInstrument = msg.userId % audio.instruments.length;
   console.log("Got someone in: " + userId);
   console.log(Object.keys(usersPos).length + " people in the room");
-
+  currentRoom = msg.room;
   usersPos[userId] = msg.position;
   lastTransmittedPos = {
     x: msg.position.x,
     y: msg.position.y
   }
 
-  console.log(msg.room);
   composition.startComposition(msg.room.instrument);
   audio.onRoomJoined(userId, msg.room.instrument, msg.position, usersPos)
 });
@@ -104,3 +103,42 @@ socket.getRandomPosition = function() {
     y: 0
   }
 }
+
+function filterRealUsers(users) {
+  let filteredUsers = {};
+  Object.keys(users).forEach(k => {
+    if (!users[k].isArtifical) {
+      filterRealUsers[k] = users[k]
+    }
+  })
+
+  return filterRealUsers;
+}
+
+function getRandomPosition() {
+  return {
+    x: Math.random(),
+    y: Math.random()
+  }
+}
+
+function makeNoiseIfTooQuite() {
+  if (Object.keys(usersPos).length / currentRoom.maxUsers < 0.5) {
+    let randomXY = getRandomPosition()
+    let newUid = 100000000 + artificialNodes
+    usersPos[newUid] = randomXY
+    usersPos[newUid].isArtifical = true
+    artificialNodes++    
+    audio.onRoomJoined(newUid, currentRoom.instrument, randomXY, null)
+    
+    setTimeout(function() {
+      audio.onUserLeftRoom(newUid)
+      artificialNodes--
+      delete usersPos[newUid]
+    }, 180000 - 10000 * artificialNodes)
+
+  }
+  setTimeout(makeNoiseIfTooQuite, 10000 * (artificialNodes+1))
+}
+
+setTimeout(makeNoiseIfTooQuite, 10000);

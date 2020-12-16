@@ -113,7 +113,6 @@ audio.onRoomJoined = function(userId, instrument, position, usersPos) {
 
 
     Object.keys(allUsers).forEach(i => {
-        //let trackNumber = getTrackForUser(i)
         audio.userInstruments[i] = composition.handleTrackStart(instrument)
 
         tracks[getTrackForUser(i)].start()

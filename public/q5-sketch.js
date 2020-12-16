@@ -44,6 +44,11 @@ q5.draw = function () {
                 h = 70
                 r += 50
             }
+
+            if (usersPos[i].isArtifical) {
+                h = 50
+            }
+            
             q5.fill(h, 80, 80, 1 - 0.8 * r / 110)
             q5.circle(usersPos[i].x * WIDTH, usersPos[i].y * HEIGHT, r);
             q5.noFill();

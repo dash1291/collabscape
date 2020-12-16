@@ -134,5 +134,4 @@ function doSomethingInteresting() {
         // osc.frequency = bassFreq * i;
     });
     if (audio.isPlaying) startSound();
-    console.log('DO IT!');
 }
