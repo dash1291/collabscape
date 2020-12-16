@@ -3,14 +3,13 @@ var sampleCount = 13;
 
 let sequences = ["0 3", "~ 5 ~", "12 ~ 7 ~ 8", "24 24 ~"];
 let pattern = [0, 2, 4, 5, 7, 9, 11];
+let loadKeys = [0, 3, 5, 7, 8];
 let tracks = [];
 let trackCount = 20;
 
 var composition = {}
 
 composition.handleTrackStart = function(instrumentName) {
-    let loadKeys = [0, 3, 5, 7, 8];
-
     let tunerRand = function (num) {
         let tunes = ['ji_12', 'slendro', 'jorgensen', 'jousse', 'jousse2', 'balafon', 'bolivia', 'burma3', 'hammond', 'helmholtz', 'hirajoshi', 'hummel', 'rousseauw', 'tamil', 'turkish_bagl'];
         return tunes[Math.floor(Math.random() * tunes.length)];
