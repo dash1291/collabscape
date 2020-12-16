@@ -1,14 +1,31 @@
 .spaced {
-  background-color: #faebdd;
+  background-color: rgba(250,235,221, 0.8);
+  font-family: 'bc-liguria';
   position: fixed;
-  left: 50vw;
-  height: 20vh;
-  padding: 50px;
-  top: 50vh;
-  width: 40vw;
-  z-index: 11;
+  display: flex;
+  box-shadow: 2px gray;
+  color: black;
+  /* left: 50vw; */
+  padding: 20px;
+  right: 58px;
+  height: 100vh;
+  /* padding: 50px; */
+  top: 0;
+  width: 26vw;
+  z-index: 20;
 }
 
+@media (max-width: 1000px) {
+  .spaced {
+    width: 100vw;
+    text-align: center;
+    left: 0;
+    right: 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+}
 #sketchCanvas {
   display: block;
   position: fixed;
