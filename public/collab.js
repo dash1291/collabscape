@@ -7,7 +7,6 @@ var socket = io.connect('https://do.ashishdubey.xyz');
 var userId;
 var usersPos = {};
 var currentRoom = null;
-var artificialNodes = 0;
 
 // assign room if none is assigned
 function assignRoom() {
@@ -104,15 +103,15 @@ socket.getRandomPosition = function() {
   }
 }
 
-function filterRealUsers(users) {
-  let filteredUsers = {};
+function filterArticialNodes(users) {
+  let filteredUsers = []
   Object.keys(users).forEach(k => {
-    if (!users[k].isArtifical) {
-      filterRealUsers[k] = users[k]
+    if (users[k].isArtifical) {
+      filteredUsers.push(k)
     }
   })
 
-  return filterRealUsers;
+  return filteredUsers;
 }
 
 function getRandomPosition() {
@@ -123,6 +122,8 @@ function getRandomPosition() {
 }
 
 function makeNoiseIfTooQuite() {
+  let artificialNodes = filterArticialNodes(usersPos).length
+
   if (Object.keys(usersPos).length / currentRoom.maxUsers < 0.5) {
     let randomXY = getRandomPosition()
     let newUid = 100000000 + artificialNodes
@@ -133,7 +134,6 @@ function makeNoiseIfTooQuite() {
     
     setTimeout(function() {
       audio.onUserLeftRoom(newUid)
-      artificialNodes--
       delete usersPos[newUid]
     }, 180000 - 10000 * artificialNodes)
 
