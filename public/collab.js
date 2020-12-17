@@ -30,6 +30,20 @@ function readURL() {
 
 readURL();
 
+let userActivityTimer = null; 
+  
+function userBecameActive() {
+  if (userActivityTimer) {
+    clearTimeout(userActivityTimer)
+  }
+
+  // disconnect the user after no activity has been seen for a while
+  userActivityTimer = setTimeout(function(){
+    console.log('Disconnecting an idle user')
+    socket.disconnect();
+  }, 30 * 60 * 1000)
+}
+
 socket.on('welcome', msg => {
   userId = msg.userId;
   usersPos = msg.room.users
@@ -90,6 +104,8 @@ socket.on('leave', msg => {
 });
 
 socket.onPositionChanged = function(userXY) {
+  userBecameActive();
+
   socket.emit('move', {
     userId: userId,
     position: userXY
