@@ -33,10 +33,12 @@ if (isMobile == false) {
         height: 1024,
     })
     let visFX = hydra.synth
-    visFX.s0.init({
-        src: q5.canvas,
-        dynamic: true, // optional parameter. Set to false if using a static image or something that will not change
-    })
+    if (q5S != undefined) {
+        visFX.s0.init({
+            src: q5S.canvas,
+            dynamic: true, // optional parameter. Set to false if using a static image or something that will not change
+        })
+    }
 
     // 13 Nov 2020
     //visFX.src(visFX.s0) // This should pick up the canvas element from p5
@@ -54,13 +56,13 @@ if (isMobile == false) {
         .add(visFX.shape(4).scale(() => (0.2 * 20 + 1), .1, 1))
         .add(visFX.shape(3).rotate(Math.PI).scale(() => (0.25 * 2.5 + 1), .1, 1).scrollX(-0.25).rotate([0, Math.PI * 0.25, Math.PI * 0.75, Math.PI, Math.PI * 1.25, Math.PI * 1.5, Math.PI * 1.75].ease('easeInOutCubic')))
         .add(visFX.shape(3).scale(() => (0.5 + 1.25), .1, 1).scrollX(-0.45).rotate([0, Math.PI * 0.25, Math.PI * 0.75, Math.PI, Math.PI * 1.25, Math.PI * 1.5, Math.PI * 1.75].ease('easeInOutCubic').fast(0.5)))
-        .add(visFX.src(visFX.s0))
         .out(visFX.o1)
     visFX.src(visFX.o1)
         .add(visFX.src(visFX.o1).kaleid().scale(() => (0.2 * 0.25 + 0.1)).blend(visFX.src(visFX.o1).kaleid().scale(0.25), 0), 0.1)
         .add(visFX.src(visFX.o1).kaleid().scale(() => (0.5 * 0.125 + 0.1)), 0.15)
-        // .add(visFX.src(visFX.o1).kaleid().scale(() => (0.4 * 0.0125 + 0.1)), 0.25)
-        .blend(visFX.src(visFX.o0).rotate(1.57), 0.125)
-        //.blend(visFX.src(visFX.o0).scale(() => Math.cos(time / 4)).brightness(() => Math.sin(time / 2) * 2 - 1), 0.25)
+        .blend(visFX.src(visFX.s0))
+        //// .add(visFX.src(visFX.o1).kaleid().scale(() => (0.4 * 0.0125 + 0.1)), 0.25)
+        // .blend(visFX.src(visFX.o0).rotate(1.57), 0.25)
+        ////.blend(visFX.src(visFX.o0).scale(() => Math.cos(time / 4)).brightness(() => Math.sin(time / 2) * 2 - 1), 0.25)
         .out()
 }

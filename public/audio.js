@@ -157,6 +157,7 @@ document.onclick = function () {
     }
     let spaced = document.getElementById("notif");
     spaced.className = 'hide';
+    spaced.innerHTML = '';
     Tone.Transport.start();
     audio.isPlaying = true;
 }
