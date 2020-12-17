@@ -3,18 +3,24 @@ let HEIGHT = window.innerHeight - 20;
 let bgColor = '#333'
 let lastTransmittedPos = {}
 let moveDirection = '';
-let dragging = false;
 
-let q5S = new p5(function (q5) {
+let q5 = new Q5();
+
 q5.setup = function () {
     q5.createCanvas(WIDTH, HEIGHT)
     q5.frameRate(30)
     q5.background(bgColor)
     q5.colorMode(q5.HSL);
 
-    q5.textFont('bc-liguria');
+    q5.textFont('Helvetica');
     q5.textSize(16);
     q5.textAlign(q5.CENTER, q5.CENTER);
+
+    var hammer = new Hammer(document.body, { preventDefault: true });
+    hammer.on("panleft panright panup pandown tap press", function (ev) {
+        moveDirection = ev.type;
+        document.getElementById("notif").textContent = ev.type + " gesture detected.";
+    });
 }
 
 q5.draw = function () {
@@ -53,54 +59,37 @@ q5.draw = function () {
         })
     }
 
-    if (tracks[0] != undefined) {
+    if (tracks[0] != 'undefined') {
         q5.fill(255);
         q5.textSize(50);
         q5.textAlign(q5.CENTER, q5.CENTER);
-        // if (tracks[0].currentNote != undefined) q5.text(tracks[0].currentNote, WIDTH / 2, HEIGHT / 2);
+        // q5.text(tracks[0].currentNote, WIDTH / 2, HEIGHT / 2);
     }
 
     // movement
-    if (q5.keyIsDown(q5.UP_ARROW)) {
+    if (q5.keyIsDown(q5.UP_ARROW) || moveDirection == 'panup') {
         usersPos[userId].y = Math.max(usersPos[userId].y - 10 / HEIGHT, 0)
     }
 
-    if (q5.keyIsDown(q5.DOWN_ARROW)) {
+    if (q5.keyIsDown(q5.DOWN_ARROW) || moveDirection == 'pandown') {
         usersPos[userId].y = Math.min(usersPos[userId].y + 10 / HEIGHT, 1)
     }
 
-    if (q5.keyIsDown(q5.LEFT_ARROW)) {
+    if (q5.keyIsDown(q5.LEFT_ARROW) || moveDirection == 'panleft') {
         usersPos[userId].x = Math.max(usersPos[userId].x - 10 / WIDTH, 0)
     }
 
-    if (q5.keyIsDown(q5.RIGHT_ARROW)) {
+    if (q5.keyIsDown(q5.RIGHT_ARROW) || moveDirection == 'panright') {
         usersPos[userId].x = Math.min(usersPos[userId].x + 10 / WIDTH, 1)
     }
-
-    if (q5.mouseIsPressed) {
-        if (q5.dist(usersPos[userId].x * WIDTH, usersPos[userId].y * HEIGHT, q5S.mouseX, q5S.mouseY) < 20) {
-            dragging = true;
-            // console.log('Dragging')
-        }
-    }
-
-    // // In case dragging
-    if (dragging) {
-        usersPos[userId].x = q5.mouseX / WIDTH;
-        usersPos[userId].y = q5.mouseY / HEIGHT;
-    }
-    q5.mouseReleased = function () {
-        dragging = false;
-    }
 }
-}, document.getElementById("sketchCanvas"));
 
 // interval for detecting movement. highly conditional to avoid
 // bombarding the audio changes
 setInterval(() => {
     let hasXYChanged = false;
     let areKeysDown = false;
-    areKeysDown = q5S.keyIsDown(q5S.UP_ARROW) || q5S.keyIsDown(q5S.DOWN_ARROW) || q5S.keyIsDown(q5S.LEFT_ARROW) || q5S.keyIsDown(q5S.RIGHT_ARROW);
+    areKeysDown = q5.keyIsDown(q5.UP_ARROW) || q5.keyIsDown(q5.DOWN_ARROW) || q5.keyIsDown(q5.LEFT_ARROW) || q5.keyIsDown(q5.RIGHT_ARROW);
     if (usersPos[userId]) {
         hasXYChanged = (usersPos[userId].x != lastTransmittedPos.x) || (usersPos[userId].y != lastTransmittedPos.y)
     }
@@ -108,12 +97,12 @@ setInterval(() => {
     if (!areKeysDown && hasXYChanged) {
         const userXY = usersPos[userId];
         audio.onPositionChanged(userXY, {
-            x: q5S.mouseX,
-            y: q5S.mouseY
+            x: q5.mouseX,
+            y: q5.mouseY
         })
 
         socket.onPositionChanged(userXY);
-        masterlpf.frequency.value = Math.abs(q5S.map(usersPos[userId].y, 1, 0, 500, 18000));
+        masterlpf.frequency.value = Math.abs(q5.map(usersPos[userId].y, 1, 0, 500, 18000));
 
         lastTransmittedPos = {
             x: usersPos[userId].x,
@@ -121,3 +110,6 @@ setInterval(() => {
         }
     }
 }, 1000)
+
+let sketchCanvas = document.getElementById("sketchCanvas");
+sketchCanvas.appendChild(q5.canvas);

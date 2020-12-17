@@ -1,51 +1,53 @@
-/* CSS files add styling rules to your content */
-
-body {
-  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
-  margin: 2em;
-  background-color: #103040;
-  color: #ccc;
-}
-html, body {
-  height: 100%;
-}
-
-h1 {
-  font-style: italic;
-  color: #373fff;
-}
-
-body {
- 
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-
-  /* This centers our sketch horizontally. */
-  justify-content: center;
-
-  /* This centers our sketch vertically. */
-  align-items: center;
-}
-
-#sketch-canvas {
-   display: block;
-}
-
 .spaced {
-   margin: 16px; 
+  background-color: rgba(250,235,221, 0.9);
+  font-family: 'bc-liguria';
+  position: fixed;
+  display: flex;
+  box-shadow: 2px gray;
+  color: black;
+  padding: 20px;
+  right: 58px;
+  height: 50vh;
+  top: 50vh;
+  width: 26vw;
+  z-index: 20;
 }
 
-.toolbox__item {
-    font-size: 14px;
-    cursor: pointer;
-    padding: 16px;
-    border: none;
-    background: #333;
-    color: #ccc;
+@media (max-width: 1000px) {
+  .spaced {
+    width: 80vw;
+    text-align: left;
+    top: 15vh;
+    right: 0;
+    align-items: center;
+    justify-content: center;
+    font-size: 32pt;
+  }
+
 }
 
-.toolbox__item--selected {
-    color: #333;
-    background: #ccc;
+@media (max-height: 800px) {
+  .spaced {
+    font-size: 14pt;
+  }
+}
+
+#sketchCanvas {
+  display: block;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: -10;
+}
+
+#hydraCanvas {
+  display: block;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+}
+
+.hide {
+  display: hidden;
 }
