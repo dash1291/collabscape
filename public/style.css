@@ -32,12 +32,20 @@
   }
 }
 
-#sketchCanvas {
+.sketchCanvas {
   display: block;
   position: fixed;
   top: 10px;
   left: 10px;
   z-index: -10;
+}
+
+#sketchCanvas {
+  opacity: 1;
+}
+
+#mobileCanvas {
+  opacity: 0.5;
 }
 
 #hydraCanvas {
