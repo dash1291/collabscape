@@ -60,6 +60,7 @@ socket.on('welcome', msg => {
 
   composition.startComposition(msg.room.instrument);
   audio.onRoomJoined(userId, msg.room.instrument, msg.position, usersPos)
+  userBecameActive()
 });
 
 

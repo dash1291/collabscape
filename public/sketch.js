@@ -1,6 +1,6 @@
 let WIDTH = window.innerWidth - 20;
 let HEIGHT = window.innerHeight - 20;
-let bgColor = '#333'
+let bgColor = '#333';
 let lastTransmittedPos = {}
 let moveDirection = '';
 let dragging = false;
