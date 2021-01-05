@@ -1,3 +1,7 @@
+body {
+  touch-action: none;
+}
+
 .spaced {
   background-color: rgba(250,235,221, 0.9);
   font-family: 'bc-liguria';
